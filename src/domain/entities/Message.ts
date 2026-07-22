@@ -1,10 +1,9 @@
-export enum MessageRole {
-    USER = "user",
-    ASSISTANT = "assistant",
-}
+import { MessageRole } from "./MessageRole";
 
-export interface Message {
-    readonly id: string;
-    readonly role: MessageRole;
-    readonly content: string;
+export class Message {
+    public constructor(
+        public readonly id: string,
+        public readonly role: MessageRole,
+        public readonly content: string,
+    ) {}
 }
