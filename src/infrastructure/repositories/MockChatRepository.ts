@@ -8,21 +8,25 @@ import { ChatRepository } from "@/domain/repositories/ChatRepository";
  */
 export class MockChatRepository implements ChatRepository {
     /**
-     * Simulates sending a message by introducing a artificial delay before
-     * returning a static mock response entity.
+     * Simulates sending a conversation history by introducing an artificial delay before
+     * returning a mock assistant response based on the last message received.
      *
-     * @param message The domain message entity to send.
+     * @param history An immutable array of Message domain entities representing the conversation context.
      * @returns A promise that resolves to a newly created assistant Message entity.
      */
-    public async sendMessage(message: Message): Promise<Message> {
+    public async sendConversation(
+        history: readonly Message[],
+    ): Promise<Message> {
         await new Promise<void>((resolve) => {
             setTimeout(resolve, 800);
         });
 
+        const lastMessage = history.at(-1);
+
         return new Message(
             crypto.randomUUID(),
             MessageRole.ASSISTANT,
-            `Mock response: ${message.content}`,
+            `Mock response: ${lastMessage?.content ?? ""}`,
         );
     }
 }
