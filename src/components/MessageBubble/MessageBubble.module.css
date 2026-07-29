@@ -1,0 +1,23 @@
+.container {
+    max-width: 70%;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    word-break: break-word;
+}
+
+.user {
+    align-self: flex-end;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.assistant {
+    align-self: flex-start;
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.content {
+    margin: 0;
+    white-space: pre-wrap;
+}
