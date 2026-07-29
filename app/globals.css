@@ -1,7 +1,7 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 html,
@@ -11,14 +11,15 @@ body {
 }
 
 body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f3f4f6;
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #f5f5f5;
-    color: #111827;
 }
 
 button,
-input,
-textarea {
+input {
     font: inherit;
 }
 
