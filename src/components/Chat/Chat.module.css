@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 900px;
+    height: 700px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.error {
+    padding: 1rem;
+    color: #dc2626;
+    text-align: center;
+}
