@@ -1,5 +1,4 @@
 import Link from "next/link";
-
 import styles from "@/styles/About.module.css";
 
 export default function DetailsPage() {
@@ -24,7 +23,7 @@ export default function DetailsPage() {
                     </p>
 
                     <p>
-                        Muitos de vocês eu só conheço por tela, mas a verdade é que as nossas Nightly (a nossa versão da *daily*) 
+                        Muitos de vocês eu só conheço por tela, mas a verdade é que as nossas Nightly (a nossa versão da daily) 
                         viraram o ponto alto dos meus dias. Valeu por cada risada, troca de ideia e perrengue para resolver código!
                     </p>
 
