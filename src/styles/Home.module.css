@@ -1,0 +1,55 @@
+.main {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 48px;
+    background: #f5f7fb;
+}
+
+.hero {
+    max-width: 720px;
+    text-align: center;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.description {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin-bottom: 16px;
+    color: #555;
+}
+
+.button {
+    display: inline-block;
+    margin-top: 32px;
+    padding: 14px 28px;
+    border-radius: 8px;
+    background: #111827;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+.button:hover {
+    opacity: 0.9;
+}
+
+.about {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: #666;
+}
+
+.about:hover {
+    color: #000;
+}

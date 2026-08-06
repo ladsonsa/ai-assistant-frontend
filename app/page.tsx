@@ -1,32 +1,41 @@
 import Link from "next/link";
 
+import styles from "@/styles/Home.module.css";
+
 export default function HomePage() {
     return (
-        <main>
-            <section>
-                <h1>AI Assistant Platform</h1>
+        <main className={styles.main}>
+            <section className={styles.hero}>
+                <h1 className={styles.title}>
+                    AI Assistant Platform
+                </h1>
 
-                <p>
-                    An AI-powered mathematical assistant built with
-                    Clean Architecture, Next.js and Python.
+                <p className={styles.description}>
+                    AI-powered mathematical assistant built with
+                    Next.js, TypeScript, FastAPI and Python.
                 </p>
 
-                <p>
-                    This project demonstrates a complete frontend and backend
-                    architecture using REST communication, dependency injection
-                    and repository pattern.
+                <p className={styles.description}>
+                    This project demonstrates the implementation
+                    of a modern frontend consuming an AI backend
+                    through a REST API while following Clean
+                    Architecture and SOLID principles.
                 </p>
 
-                <Link href="/chat">
+                <Link
+                    href="/chat"
+                    className={styles.button}
+                >
                     Start Chat
                 </Link>
             </section>
 
-            <footer>
-                <Link href="/about">
-                    About
-                </Link>
-            </footer>
+            <Link
+                href="/about"
+                className={styles.about}
+            >
+                About
+            </Link>
         </main>
     );
 }
