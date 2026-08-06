@@ -25,9 +25,15 @@
     color: #555;
 }
 
+.buttonGroup {
+    display: flex;
+    justify-content: center;
+    gap: 16px; 
+    margin-top: 32px;
+}
+
 .button {
     display: inline-block;
-    margin-top: 32px;
     padding: 14px 28px;
     border-radius: 8px;
     background: #111827;

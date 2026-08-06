@@ -57,3 +57,17 @@
 .backButton:hover {
     opacity: 0.9;
 }
+
+.secretLink {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    opacity: 0.12;
+    text-decoration: none;
+    font-size: 1.95rem;
+    transition: opacity 0.2s ease;
+}
+
+.secretLink:hover {
+    opacity: 0.45;
+}

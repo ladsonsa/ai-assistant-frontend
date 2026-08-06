@@ -22,20 +22,16 @@ export default function HomePage() {
                     Architecture and SOLID principles.
                 </p>
 
-                <Link
-                    href="/chat"
-                    className={styles.button}
-                >
-                    Start Chat
-                </Link>
-            </section>
+                <div className={styles.buttonGroup}>
+                    <Link href="/chat" className={styles.button}>
+                        Start Chat
+                    </Link>
 
-            <Link
-                href="/about"
-                className={styles.about}
-            >
-                About
-            </Link>
+                    <Link href="/about" className={styles.button}>
+                        About
+                    </Link>
+                </div>
+            </section>
         </main>
     );
 }

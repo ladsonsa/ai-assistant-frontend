@@ -85,6 +85,13 @@ export default function AboutPage() {
                     </Link>
                 </nav>
             </div>
+            <Link
+                href="/about/details"
+                className={styles.secretLink}
+                aria-label="Additional details"
+            >
+                🏺
+            </Link>
         </main>
     );
 }
