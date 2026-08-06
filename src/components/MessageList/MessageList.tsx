@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import { Message } from "@/domain/entities/Message";
 
 import { MessageBubble } from "../MessageBubble/MessageBubble";
@@ -11,6 +14,12 @@ interface MessageListProps {
 export function MessageList({
     messages,
 }: MessageListProps) {
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
     return (
         <div className={styles.container}>
             {messages.map((message) => (
@@ -19,6 +28,7 @@ export function MessageList({
                     message={message}
                 />
             ))}
+            <div ref={messagesEndRef} />
         </div>
     );
 }

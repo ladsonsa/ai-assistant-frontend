@@ -1,25 +1,326 @@
+.layout {
+    display: grid;
+    grid-template-columns: 260px 1fr 260px;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background: #0f172a;
+    color: #f8fafc;
+    position: relative;
+}
+
+.layout.lightTheme {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.layout.lightTheme .sidebar {
+    background: #ffffff;
+    border-right-color: #e2e8f0;
+}
+
+.layout.lightTheme .container {
+    background: #f8fafc;
+}
+
+.layout.lightTheme .rightSidebar {
+    background: #ffffff;
+    border-left-color: #e2e8f0;
+}
+
+.layout.lightTheme .historyItem {
+    background: #f8fafc;
+    color: #475569;
+}
+
+.layout.lightTheme .historyItem:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.layout.lightTheme .historyItem.active {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.layout.lightTheme .toggleLeft,
+.layout.lightTheme .toggleRight,
+.layout.lightTheme .themeButton {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    color: #0f172a;
+}
+
+.layout.lightTheme .toggleLeft:hover,
+.layout.lightTheme .toggleRight:hover,
+.layout.lightTheme .themeButton:hover {
+    background: #f1f5f9;
+}
+
+.layout.lightTheme .resultBox {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    color: #0f172a;
+}
+
+.sidebar {
+    background: #1e293b;
+    border-right: 1px solid #334155;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 16px;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 260px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+.sidebar.closed {
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    opacity: 0;
+    border-right: none;
+}
+
+.toggleLeft {
+    position: absolute;
+    left: 244px;
+    top: 16px;
+    z-index: 10;
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #f8fafc;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s;
+}
+
+.toggleLeft.closed {
+    left: 12px;
+}
+
+.toggleRight {
+    position: absolute;
+    right: 244px;
+    top: 16px;
+    z-index: 10;
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #f8fafc;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s;
+}
+
+.toggleRight.closed {
+    right: 12px;
+}
+
+.toggleLeft:hover, .toggleRight:hover, .themeButton:hover {
+    background: #334155;
+}
+
+.rightSidebar {
+    background: #1e293b;
+    border-left: 1px solid #334155;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 20px;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 260px;
+    opacity: 1;
+    overflow-y: auto;
+}
+
+.rightSidebar.closed {
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    opacity: 0;
+    border-left: none;
+}
+
+.newChatButton {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    transition: background 0.2s;
+}
+
+.newChatButton:hover {
+    background: #2563eb;
+}
+
+.historyList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.historyItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    background: #1e293b;
+    text-align: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.historyTitle {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    text-align: center;
+}
+
+.historyItem:hover {
+    background: #334155;
+    color: #f8fafc;
+}
+
+.historyItem.active {
+    background: #334155;
+    color: #f8fafc;
+    font-weight: bold;
+}
+
+.deleteButton {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0 4px;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+}
+
+.deleteButton:hover {
+    color: #f87171;
+    background: #334155;
+}
+
+.deleteAllButton {
+    background: transparent;
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.deleteAllButton:hover {
+    background: #ef4444;
+    color: white;
+}
+
 .container {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: 900px;
-    height: 700px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 1rem;
+    height: 100vh;
+    background: #0f172a;
+    padding: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #334155;
+    margin-bottom: 12px;
+}
+
+.themeButton {
+    background: #2563eb;
+    border: 1px solid #334155;
+    color: #f8fafc;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.themeButton:hover {
+    background: #334155;
+}
+
+.appTitle {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: inherit;
 }
 
 .messages {
-    display: flex;
-    flex-direction: column;
     flex: 1;
-    overflow: hidden;
+    overflow-y: auto;
+    margin-bottom: 16px;
 }
 
 .error {
-    padding: 1rem;
-    color: #dc2626;
-    text-align: center;
+    color: #f87171;
+    font-size: 0.875rem;
+    margin-top: 8px;
 }
+
+.boxSection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.boxSection h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.resultBox {
+    background: #0f172a;
+    border: 1px solid #334155;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: inherit;
+}
+

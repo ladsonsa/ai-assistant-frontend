@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useRef } from "react";
 
 import styles from "./MessageInput.module.css";
 
@@ -14,6 +14,7 @@ export function MessageInput({
     onSend,
 }: MessageInputProps) {
     const [content, setContent] = useState("");
+    const inputRef = useRef<HTMLInputElement>(null);
 
     async function handleSubmit(
         event: FormEvent<HTMLFormElement>,
@@ -26,9 +27,13 @@ export function MessageInput({
             return;
         }
 
+        setContent("");
+        
         await onSend(value);
 
-        setContent("");
+        setTimeout(() => {
+            inputRef.current?.focus();
+        }, 0);
     }
 
     return (
@@ -37,11 +42,13 @@ export function MessageInput({
             onSubmit={handleSubmit}
         >
             <input
+                ref={inputRef}
                 className={styles.input}
                 type="text"
                 value={content}
                 placeholder="Type your message..."
                 disabled={disabled}
+                autoFocus
                 onChange={(event) => {
                     setContent(event.target.value);
                 }}
