@@ -1,26 +1,110 @@
+.messageRow {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 18px;
+    width: 100%;
+}
+
+.rowUser {
+    flex-direction: row-reverse;
+}
+
+.rowAssistant {
+    flex-direction: row;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.iconSvg {
+    width: 22px;
+    height: 22px;
+    transition: transform 0.2s ease;
+}
+
+.avatar:hover .iconSvg {
+    transform: scale(1.08);
+}
+
+.avatarUser {
+    background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.avatarAssistant {
+    background: var(--avatar-bg, rgba(30, 41, 59, 0.85));
+    color: var(--avatar-color, #38bdf8);
+    border: 1px solid var(--avatar-border, rgba(56, 189, 248, 0.35));
+    box-shadow: var(--avatar-shadow, 0 4px 14px rgba(0, 0, 0, 0.2));
+}
+
+.avatarAssistant:hover {
+    filter: brightness(1.1);
+}
+
+:global([data-theme="light"]) .avatarAssistant,
+:global(.light) .avatarAssistant,
+:global(.light-mode) .avatarAssistant {
+    --avatar-bg: #f1f5f9;
+    --avatar-color: #0f172a;
+    --avatar-border: #cbd5e1;
+    --avatar-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
+}
+
+@media (prefers-color-scheme: light) {
+    :global(:root:not([data-theme="dark"])) .avatarAssistant {
+        --avatar-bg: #f1f5f9;
+        --avatar-color: #0f172a;
+        --avatar-border: #cbd5e1;
+        --avatar-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
+    }
+}
+
 .container {
-    max-width: 70%;
+    max-width: 75%;
     padding: 0.875rem 1.125rem;
     border-radius: 1rem;
     word-break: break-word;
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(12px);
     transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .user {
-    align-self: flex-end;
     background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
     color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
 }
 
 .assistant {
-    align-self: flex-start;
-    background: var(--bg-surface, rgba(30, 41, 59, 0.6));
+    background: var(--bg-surface, rgba(30, 41, 59, 0.65));
     color: var(--text-main, #f8fafc);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    border-left: 3px solid var(--accent-color, #38bdf8);
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+:global([data-theme="light"]) .assistant,
+:global(.light) .assistant,
+:global(.light-mode) .assistant {
+    --bg-surface: #ffffff;
+    --text-main: #0f172a;
+    --border-color: #e2e8f0;
+    --accent-color: #2563eb;
 }
 
 .content {
