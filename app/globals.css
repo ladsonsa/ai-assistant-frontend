@@ -12,15 +12,15 @@ body {
 }
 
 body {
-    background-color: #0f172a;
+    background-color: #0a0a0a;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    color: #f8fafc;
+    color: #a3a3a3;
 }
 
 /* Modo claro global no body */
 body.light {
-    background-color: #f1f5f9;
-    color: #0f172a;
+    background-color: #ffffff;
+    color: #0a0a0a;
 }
 
 button,
@@ -30,4 +30,20 @@ input {
 
 button {
     cursor: pointer;
+    background-color: #d946ef;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    transition: background-color 0.2s ease, filter 0.2s ease;
+}
+
+body.light button {
+    background-color: #d946ef;
+    color: #ffffff;
+    border: none;
+}
+
+button:hover {
+    filter: brightness(1.15);
 }

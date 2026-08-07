@@ -19,11 +19,11 @@
 }
 
 .container::-webkit-scrollbar-thumb {
-    background: var(--border-color, rgba(255, 255, 255, 0.12));
+    background: var(--border-color, rgba(217, 70, 239, 0.2));
     border-radius: 4px;
     transition: background 0.2s ease;
 }
 
 .container::-webkit-scrollbar-thumb:hover {
-    background: var(--border-active, rgba(56, 189, 248, 0.4));
+    background: var(--border-active, rgba(217, 70, 239, 0.5));
 }

@@ -1,10 +1,10 @@
 .main {
-    --bg-color: #0f172a;
-    --card-bg: rgba(30, 41, 59, 0.5);
-    --card-border: rgba(255, 255, 255, 0.1);
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --button-bg: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+    --bg-color: #050505;
+    --card-bg: rgba(26, 26, 26, 0.75);
+    --card-border: rgba(217, 70, 239, 0.3);
+    --text-primary: #ffffff;
+    --text-secondary: #a3a3a3;
+    --button-bg: linear-gradient(135deg, #d946ef 0%, #9333ea 100%);
     --button-color: #ffffff;
 
     display: flex;
@@ -19,15 +19,15 @@
     transition: background-color 0.3s ease;
 }
 
-/* Suporte ao Modo Claro global via body */
+/* Suporte ao Modo Claro global via body com magenta, branco e preto */
 :global(body.light) .main {
-    --bg-color: #f1f5f9;
-    --card-bg: rgba(255, 255, 255, 0.75);
-    --card-border: rgba(226, 232, 240, 0.8);
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --button-bg: rgba(226, 232, 240, 0.8);
-    --button-color: #0f172a;
+    --bg-color: #ffffff;
+    --card-bg: rgba(244, 244, 245, 0.9);
+    --card-border: rgba(217, 70, 239, 0.3);
+    --text-primary: #09090b;
+    --text-secondary: #52525b;
+    --button-bg: linear-gradient(135deg, #d946ef 0%, #c026d3 100%);
+    --button-color: #09090b;
 }
 
 .container {
@@ -42,7 +42,7 @@
     backdrop-filter: blur(12px);
     border: 1px solid var(--card-border);
     border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
     transition: all 0.3s ease;
 }
 
@@ -95,7 +95,7 @@
     color: var(--button-color);
     background: var(--button-bg);
     border: 1px solid var(--card-border);
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 4px 14px rgba(217, 70, 239, 0.25);
     transition: all 0.25s ease;
 }
 
