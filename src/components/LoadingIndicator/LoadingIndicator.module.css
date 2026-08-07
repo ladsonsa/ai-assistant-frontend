@@ -3,13 +3,21 @@
     align-items: center;
     gap: 0.5rem;
     padding: 1rem;
+    background: var(--bg-surface, rgba(30, 41, 59, 0.4));
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .dot {
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    background-color: #6b7280;
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+    box-shadow: 0 0 8px var(--glow-color, rgba(56, 189, 248, 0.3));
     animation: blink 1.2s infinite ease-in-out;
 }
 
@@ -26,9 +34,11 @@
     80%,
     100% {
         opacity: 0.3;
+        transform: scale(0.9);
     }
 
     40% {
         opacity: 1;
+        transform: scale(1.1);
     }
 }

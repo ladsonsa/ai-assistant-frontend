@@ -5,4 +5,25 @@
     overflow-y: auto;
     flex: 1;
     padding: 1rem;
+    background: transparent;
+    transition: background 0.3s ease;
+}
+
+/* Scrollbar personalizada refinada */
+.container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background: var(--border-color, rgba(255, 255, 255, 0.12));
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+    background: var(--border-active, rgba(56, 189, 248, 0.4));
 }
