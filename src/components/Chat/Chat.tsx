@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { LoadingIndicator } from "@/components/LoadingIndicator/LoadingIndicator";
 import { MessageInput } from "@/components/MessageInput/MessageInput";
 import { MessageList } from "@/components/MessageList/MessageList";
 import { useChat } from "@/hooks/useChat";
+import { useTheme } from "@/hooks/useTheme";
 
 import styles from "./Chat.module.css";
 
@@ -14,25 +15,16 @@ interface Conversation {
 }
 
 export function Chat() {
-    const {
-        messages,
-        isLoading,
-        error,
-        sendMessage,
-    } = useChat();
+    const { messages, isLoading, error, sendMessage } = useChat();
+    const { theme, toggleTheme } = useTheme();
 
     const [isLeftOpen, setIsLeftOpen] = useState(true);
     const [isRightOpen, setIsRightOpen] = useState(true);
-    const [theme, setTheme] = useState<"dark" | "light">("dark");
     const [conversations, setConversations] = useState<readonly Conversation[]>([
         { id: "1", title: "Cálculo de porcentagem" },
         { id: "2", title: "Divisão e soma" }
     ]);
     const [currentChatId, setCurrentChatId] = useState<string>("1");
-
-    useEffect(() => {
-        document.documentElement.setAttribute("data-theme", theme);
-    }, [theme]);
 
     const handleNewChat = () => {
         const newId = Date.now().toString();
@@ -42,24 +34,25 @@ export function Chat() {
 
     const handleDeleteChat = (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
-        const updated = conversations.filter(conv => conv.id !== id);
-        setConversations(updated);
-        if (currentChatId === id && updated.length > 0) {
-            setCurrentChatId(updated[0].id);
-        }
+        setConversations(prev => {
+            const updated = prev.filter(conv => conv.id !== id);
+            if (currentChatId === id) {
+                setCurrentChatId(updated[0]?.id || "");
+            }
+            return updated;
+        });
     };
 
     const handleDeleteAllChats = () => {
         setConversations([]);
+        setCurrentChatId("");
     };
 
-    const toggleTheme = () => {
-        setTheme(prev => prev === "dark" ? "light" : "dark");
-    };
-
-    const lastAssistantMessage = messages
-        .filter(m => m.role === "assistant")
-        .slice(-1)[0]?.content || "Nenhum cálculo recente.";
+    // Otimizado com useMemo e findLast
+    const lastAssistantMessage = useMemo(() => {
+        const lastMsg = [...messages].reverse().find(m => m.role === "assistant");
+        return lastMsg?.content || "Nenhum cálculo recente.";
+    }, [messages]);
 
     return (
         <div className={`${styles.layout} ${theme === "light" ? styles.lightTheme : ""}`}>
@@ -93,7 +86,7 @@ export function Chat() {
             </aside>
 
             <button 
-                onClick={() => setIsLeftOpen(!isLeftOpen)} 
+                onClick={() => setIsLeftOpen(prev => !prev)} 
                 className={`${styles.toggleLeft} ${!isLeftOpen ? styles.closed : ""}`}
                 title="Alternar Sidebar Esquerda"
             >
@@ -122,7 +115,7 @@ export function Chat() {
             </section>
 
             <button 
-                onClick={() => setIsRightOpen(!isRightOpen)} 
+                onClick={() => setIsRightOpen(prev => !prev)} 
                 className={`${styles.toggleRight} ${!isRightOpen ? styles.closed : ""}`}
                 title="Alternar Painel Direito"
             >

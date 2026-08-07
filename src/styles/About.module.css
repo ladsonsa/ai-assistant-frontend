@@ -1,79 +1,120 @@
 .main {
+    --bg-color: #0f172a;
+    --card-bg: rgba(30, 41, 59, 0.5);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --button-bg: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+    --button-color: #ffffff;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     min-height: 100vh;
-    padding: 64px 32px;
-    background: #f5f7fb;
+    width: 100%;
+    padding: 24px;
+    position: relative;
+    background-color: var(--bg-color);
+    transition: background-color 0.3s ease;
+}
+
+/* Suporte ao Modo Claro global via body */
+:global(body.light) .main {
+    --bg-color: #f1f5f9;
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --card-border: rgba(226, 232, 240, 0.8);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --button-bg: rgba(226, 232, 240, 0.8);
+    --button-color: #0f172a;
 }
 
 .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 720px;
+    width: 100%;
+    padding: 48px 36px;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
 }
 
 .title {
-    font-size: 2.75rem;
-    margin-bottom: 40px;
-    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
 }
 
 .section {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    text-align: left;
+    margin-bottom: 1.5rem;
 }
 
 .section h2 {
-    margin-bottom: 16px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
 }
 
-.section p {
-    line-height: 1.7;
-    margin-bottom: 16px;
-}
-
-.section p:last-child {
-    margin-bottom: 0;
+.section p, .section li {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
 }
 
 .section ul {
+    list-style-type: disc;
     padding-left: 20px;
 }
 
-.section li {
-    margin-bottom: 8px;
-}
-
 .navigation {
+    margin-top: 2rem;
     display: flex;
     justify-content: center;
-    margin-top: 48px;
+    width: 100%;
 }
 
 .backButton {
-    text-decoration: none;
-    background: #111827;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-size: 1rem;
     font-weight: 600;
+    text-decoration: none;
+    color: var(--button-color);
+    background: var(--button-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+    transition: all 0.25s ease;
 }
 
 .backButton:hover {
-    opacity: 0.9;
+    transform: translateY(-2px);
+    filter: brightness(1.1);
 }
 
 .secretLink {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    opacity: 0.12;
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    font-size: 1.5rem;
     text-decoration: none;
-    font-size: 1.95rem;
-    transition: opacity 0.2s ease;
+    opacity: 0.6;
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .secretLink:hover {
-    opacity: 0.45;
+    opacity: 1;
+    transform: scale(1.15);
 }

@@ -1,10 +1,23 @@
-import Link from "next/link";
+"use client";
 
+import Link from "next/link";
+import { useTheme } from "@/hooks/useTheme";
 import styles from "@/styles/Home.module.css";
 
 export default function HomePage() {
+    const { theme, toggleTheme } = useTheme();
+
     return (
-        <main className={styles.main}>
+        <main className={`${styles.main} ${theme === "light" ? styles.lightTheme : ""}`}>
+            <button
+                type="button"
+                className={styles.themeToggle}
+                onClick={toggleTheme}
+                aria-label="Alternar tema"
+            >
+                {theme === "dark" ? "☀️" : "🌙"}
+            </button>
+
             <section className={styles.hero}>
                 <h1 className={styles.title}>
                     AI Assistant Platform
@@ -13,13 +26,6 @@ export default function HomePage() {
                 <p className={styles.description}>
                     AI-powered mathematical assistant built with
                     Next.js, TypeScript, FastAPI and Python.
-                </p>
-
-                <p className={styles.description}>
-                    This project demonstrates the implementation
-                    of a modern frontend consuming an AI backend
-                    through a REST API while following Clean
-                    Architecture and SOLID principles.
                 </p>
 
                 <div className={styles.buttonGroup}>
