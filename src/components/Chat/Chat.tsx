@@ -21,14 +21,19 @@ export function Chat() {
     const [isLeftOpen, setIsLeftOpen] = useState(true);
     const [isRightOpen, setIsRightOpen] = useState(true);
     const [conversations, setConversations] = useState<readonly Conversation[]>([
-        { id: "1", title: "Cálculo de porcentagem" },
-        { id: "2", title: "Divisão e soma" }
+        { id: "1", title: "Conversa principal" },
     ]);
     const [currentChatId, setCurrentChatId] = useState<string>("1");
 
     const handleNewChat = () => {
         const newId = Date.now().toString();
-        setConversations(prev => [{ id: newId, title: "Nova conversa" }, ...prev]);
+        const nextNumber = conversations.length + 1;
+        const newConversation: Conversation = {
+            id: newId,
+            title: `Conversa ${nextNumber}`
+        };
+
+        setConversations(prev => [newConversation, ...prev]);
         setCurrentChatId(newId);
     };
 
@@ -48,7 +53,6 @@ export function Chat() {
         setCurrentChatId("");
     };
 
-    // Otimizado com useMemo e findLast
     const lastAssistantMessage = useMemo(() => {
         const lastMsg = [...messages].reverse().find(m => m.role === "assistant");
         return lastMsg?.content || "Nenhum cálculo recente.";
