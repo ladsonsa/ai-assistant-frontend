@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { LoadingIndicator } from "@/components/LoadingIndicator/LoadingIndicator";
 import { MessageInput } from "@/components/MessageInput/MessageInput";
 import { MessageList } from "@/components/MessageList/MessageList";
@@ -14,13 +14,30 @@ interface Conversation {
     readonly title: string;
 }
 
+interface Result {
+    readonly id: string;
+    readonly value: string;
+}
+
+const extractNumericResult = (content: string): string | null => {
+    const matches = content.match(/-?\d+(?:[.,]\d+)?/g);
+
+    if (!matches || matches.length === 0) {
+        return null;
+    }
+
+    return matches[matches.length - 1];
+};
+
 export function Chat() {
     const { messages, isLoading, error, sendMessage } = useChat();
     const { theme, toggleTheme } = useTheme();
 
     const [isLeftOpen, setIsLeftOpen] = useState(true);
     const [isRightOpen, setIsRightOpen] = useState(true);
-    const [conversations, setConversations] = useState<readonly Conversation[]>([
+    const [conversations, setConversations] = useState<
+        readonly Conversation[]
+    >([
         { id: "1", title: "Conversa principal" },
     ]);
     const [currentChatId, setCurrentChatId] = useState<string>("1");
@@ -28,22 +45,31 @@ export function Chat() {
     const handleNewChat = () => {
         const newId = Date.now().toString();
         const nextNumber = conversations.length + 1;
+
         const newConversation: Conversation = {
             id: newId,
-            title: `Conversa ${nextNumber}`
+            title: `Conversa ${nextNumber}`,
         };
 
-        setConversations(prev => [newConversation, ...prev]);
+        setConversations((prev) => [newConversation, ...prev]);
         setCurrentChatId(newId);
     };
 
-    const handleDeleteChat = (id: string, e: React.MouseEvent) => {
-        e.stopPropagation();
-        setConversations(prev => {
-            const updated = prev.filter(conv => conv.id !== id);
+    const handleDeleteChat = (
+        id: string,
+        event: React.MouseEvent,
+    ) => {
+        event.stopPropagation();
+
+        setConversations((prev) => {
+            const updated = prev.filter(
+                (conversation) => conversation.id !== id,
+            );
+
             if (currentChatId === id) {
                 setCurrentChatId(updated[0]?.id || "");
             }
+
             return updated;
         });
     };
@@ -53,27 +79,65 @@ export function Chat() {
         setCurrentChatId("");
     };
 
-    const lastAssistantMessage = useMemo(() => {
-        const lastMsg = [...messages].reverse().find(m => m.role === "assistant");
-        return lastMsg?.content || "Nenhum cálculo recente.";
+    const recentResults = useMemo<readonly Result[]>(() => {
+        return messages
+            .filter((message) => message.role === "assistant")
+            .map((message, index) => {
+                const value = extractNumericResult(message.content);
+
+                if (!value) {
+                    return null;
+                }
+
+                return {
+                    id: `${index}-${value}`,
+                    value,
+                };
+            })
+            .filter((result): result is Result => result !== null)
+            .reverse();
     }, [messages]);
 
     return (
-        <div className={`${styles.layout} ${theme === "light" ? styles.lightTheme : ""}`}>
-            <aside className={`${styles.sidebar} ${!isLeftOpen ? styles.closed : ""}`}>
-                <button onClick={handleNewChat} className={styles.newChatButton}>
+        <div
+            className={`${styles.layout} ${
+                theme === "light" ? styles.lightTheme : ""
+            }`}
+        >
+            <aside
+                className={`${styles.sidebar} ${
+                    !isLeftOpen ? styles.closed : ""
+                }`}
+            >
+                <button
+                    onClick={handleNewChat}
+                    className={styles.newChatButton}
+                >
                     + Nova Conversa
                 </button>
+
                 <div className={styles.historyList}>
-                    {conversations.map(conv => (
-                        <div 
-                            key={conv.id} 
-                            onClick={() => setCurrentChatId(conv.id)}
-                            className={`${styles.historyItem} ${conv.id === currentChatId ? styles.active : ""}`}
+                    {conversations.map((conversation) => (
+                        <div
+                            key={conversation.id}
+                            onClick={() => setCurrentChatId(conversation.id)}
+                            className={`${styles.historyItem} ${
+                                conversation.id === currentChatId
+                                    ? styles.active
+                                    : ""
+                            }`}
                         >
-                            <span className={styles.historyTitle}>{conv.title}</span>
-                            <button 
-                                onClick={(e) => handleDeleteChat(conv.id, e)}
+                            <span className={styles.historyTitle}>
+                                {conversation.title}
+                            </span>
+
+                            <button
+                                onClick={(event) =>
+                                    handleDeleteChat(
+                                        conversation.id,
+                                        event,
+                                    )
+                                }
                                 className={styles.deleteButton}
                                 title="Apagar conversa"
                             >
@@ -82,16 +146,24 @@ export function Chat() {
                         </div>
                     ))}
                 </div>
+
                 {conversations.length > 0 && (
-                    <button onClick={handleDeleteAllChats} className={styles.deleteAllButton}>
+                    <button
+                        onClick={handleDeleteAllChats}
+                        className={styles.deleteAllButton}
+                    >
                         Apagar Todas
                     </button>
                 )}
             </aside>
 
-            <button 
-                onClick={() => setIsLeftOpen(prev => !prev)} 
-                className={`${styles.toggleLeft} ${!isLeftOpen ? styles.closed : ""}`}
+            <button
+                onClick={() =>
+                    setIsLeftOpen((prev) => !prev)
+                }
+                className={`${styles.toggleLeft} ${
+                    !isLeftOpen ? styles.closed : ""
+                }`}
                 title="Alternar Sidebar Esquerda"
             >
                 {isLeftOpen ? "◀" : "▶"}
@@ -99,9 +171,12 @@ export function Chat() {
 
             <section className={styles.container}>
                 <header className={styles.header}>
-                    <h1 className={styles.appTitle}>Calculadora IA</h1>
-                    <button 
-                        onClick={toggleTheme} 
+                    <h1 className={styles.appTitle}>
+                        Calculadora IA
+                    </h1>
+
+                    <button
+                        onClick={toggleTheme}
                         className={styles.themeButton}
                         title="Alternar Tema"
                     >
@@ -111,26 +186,57 @@ export function Chat() {
 
                 <div className={styles.messages}>
                     <MessageList messages={messages} />
+
                     {isLoading && <LoadingIndicator />}
-                    {error && <p className={styles.error}>{error}</p>}
+
+                    {error && (
+                        <p className={styles.error}>
+                            {error}
+                        </p>
+                    )}
                 </div>
 
-                <MessageInput disabled={isLoading} onSend={sendMessage} />
+                <MessageInput
+                    disabled={isLoading}
+                    onSend={sendMessage}
+                />
             </section>
 
-            <button 
-                onClick={() => setIsRightOpen(prev => !prev)} 
-                className={`${styles.toggleRight} ${!isRightOpen ? styles.closed : ""}`}
+            <button
+                onClick={() =>
+                    setIsRightOpen((prev) => !prev)
+                }
+                className={`${styles.toggleRight} ${
+                    !isRightOpen ? styles.closed : ""
+                }`}
                 title="Alternar Painel Direito"
             >
                 {isRightOpen ? "▶" : "◀"}
             </button>
 
-            <aside className={`${styles.rightSidebar} ${!isRightOpen ? styles.closed : ""}`}>
+            <aside
+                className={`${styles.rightSidebar} ${
+                    !isRightOpen ? styles.closed : ""
+                }`}
+            >
                 <div className={styles.boxSection}>
-                    <h3>Último Resultado</h3>
-                    <div className={styles.resultBox}>
-                        {lastAssistantMessage}
+                    <h3>Últimos Resultados</h3>
+
+                    <div className={styles.resultsList}>
+                        {recentResults.length === 0 ? (
+                            <div className={styles.resultBox}>
+                                Nenhum cálculo recente.
+                            </div>
+                        ) : (
+                            recentResults.map((result) => (
+                                <div
+                                    key={result.id}
+                                    className={styles.resultBox}
+                                >
+                                    {result.value}
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
             </aside>

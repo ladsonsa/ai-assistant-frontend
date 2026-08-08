@@ -327,7 +327,12 @@
     box-shadow: inset 0 0 12px var(--glow-color);
 }
 
-/* Responsividade para telas menores (empilhamento e ajuste fluido) */
+.resultsList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 @media (max-width: 1024px) {
     .container {
         margin-left: 0 !important;
