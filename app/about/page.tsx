@@ -21,23 +21,23 @@ type SectionData = TextSection | ListSection;
 // Dados sincronizados com a documentação oficial do projeto (README)
 const ABOUT_SECTIONS: SectionData[] = [
     {
-        title: "Overview",
+        title: "Visão Geral",
         type: "text",
-        content: "AI Assistant Frontend is a modern web application built with Next.js and TypeScript, designed to demonstrate the application of professional software engineering practices. It features a robust architecture emphasizing maintainability, scalability, and clear separation of responsibilities.",
+        content: "O AI Assistant Frontend é uma aplicação web moderna construída com Next.js e TypeScript, projetada para demonstrar a aplicação de práticas profissionais de engenharia de software. O projeto possui uma arquitetura robusta que enfatiza manutenibilidade, escalabilidade e uma clara separação de responsabilidades.",
     },
     {
-        title: "Architecture & Principles",
+        title: "Arquitetura e Princípios",
         type: "list",
         items: [
-            "Clean Architecture (Domain, Application, Infrastructure, Presentation)",
-            "SOLID Principles",
-            "Dependency Injection through composition",
-            "Repository Pattern for infrastructure abstraction",
-            "Strongly typed domain models using TypeScript"
+            "Clean Architecture (Domínio, Aplicação, Infraestrutura e Apresentação)",
+            "Princípios SOLID",
+            "Injeção de Dependência através de composição",
+            "Repository Pattern para abstração de infraestrutura",
+            "Modelos de domínio fortemente tipados com TypeScript"
         ],
     },
     {
-        title: "Frontend Stack",
+        title: "Tecnologias Frontend",
         type: "list",
         items: [
             "Next.js (App Router)",
@@ -48,19 +48,19 @@ const ABOUT_SECTIONS: SectionData[] = [
         ],
     },
     {
-        title: "Backend & Infrastructure",
+        title: "Backend e Infraestrutura",
         type: "list",
         items: [
             "Python & FastAPI",
             "Streamlit",
-            "OpenAI & Google Gemini APIs",
+            "APIs da OpenAI & Google Gemini",
             "Docker & Docker Compose"
         ],
     },
     {
-        title: "Project Goal",
+        title: "Objetivo do Projeto",
         type: "text",
-        content: "Build a production-oriented codebase that serves both as a complete academic project and as a portfolio example demonstrating modern frontend architecture and clean engineering standards.",
+        content: "Construir uma base de código orientada à produção que sirva tanto como um projeto acadêmico completo quanto como um exemplo de portfólio, demonstrando arquitetura frontend moderna e padrões limpos de engenharia.",
     },
 ];
 
@@ -68,7 +68,7 @@ export default function AboutPage() {
     return (
         <main className={styles.main}>
             <div className={styles.container}>
-                <h1 className={styles.title}>About the Project</h1>
+                <h1 className={styles.title}>Sobre o Projeto</h1>
 
                 {/* Renderização dinâmica baseada nas seções estruturadas */}
                 {ABOUT_SECTIONS.map((section, index) => (
@@ -88,7 +88,7 @@ export default function AboutPage() {
 
                 <nav className={styles.navigation}>
                     <Link href="/" className={styles.backButton}>
-                        Back to Home
+                        Voltar para o Início
                     </Link>
                 </nav>
             </div>
@@ -96,7 +96,7 @@ export default function AboutPage() {
             <Link
                 href="/about/details"
                 className={styles.secretLink}
-                aria-label="Additional details"
+                aria-label="Detalhes adicionais"
             >
                 🏺
             </Link>

@@ -24,7 +24,7 @@ export default function HomePage() {
 
             <section className={styles.hero}>
                 <span className={styles.badge}>
-                    AI Assistant Platform
+                    Plataforma AI Assistant
                 </span>
 
                 <h1 className={styles.title}>
@@ -41,31 +41,31 @@ export default function HomePage() {
 
                 <div className={styles.buttonGroup}>
                     <Link href="/chat" className={styles.button}>
-                        Start Chat
+                        Iniciar Chat
                     </Link>
 
                     <Link href="/about" className={styles.button}>
-                        About
+                        Sobre
                     </Link>
                 </div>
 
                 <div className={styles.features}>
                     <div className={styles.feature}>
-                        <strong>Natural Language</strong>
+                        <strong>Linguagem Natural</strong>
                         <span>
                             Envie seus cálculos usando linguagem natural.
                         </span>
                     </div>
 
                     <div className={styles.feature}>
-                        <strong>AI Powered</strong>
+                        <strong>Com Inteligência Artificial</strong>
                         <span>
                             Integração com um backend de inteligência artificial.
                         </span>
                     </div>
 
                     <div className={styles.feature}>
-                        <strong>Conversation History</strong>
+                        <strong>Histórico de Conversas</strong>
                         <span>
                             Acompanhe os cálculos realizados durante a sessão.
                         </span>

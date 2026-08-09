@@ -139,7 +139,7 @@ export function Chat() {
                                     )
                                 }
                                 className={styles.deleteButton}
-                                title="Apagar conversa"
+                                title="Excluir conversa"
                             >
                                 ×
                             </button>
@@ -152,7 +152,7 @@ export function Chat() {
                         onClick={handleDeleteAllChats}
                         className={styles.deleteAllButton}
                     >
-                        Apagar Todas
+                        Excluir Todas
                     </button>
                 )}
             </aside>
@@ -164,7 +164,7 @@ export function Chat() {
                 className={`${styles.toggleLeft} ${
                     !isLeftOpen ? styles.closed : ""
                 }`}
-                title="Alternar Sidebar Esquerda"
+                title="Alternar Barra Lateral Esquerda"
             >
                 {isLeftOpen ? "◀" : "▶"}
             </button>

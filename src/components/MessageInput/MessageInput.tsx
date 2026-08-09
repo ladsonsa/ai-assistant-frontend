@@ -46,7 +46,7 @@ export function MessageInput({
                 className={styles.input}
                 type="text"
                 value={content}
-                placeholder="Type your message..."
+                placeholder="Digite sua mensagem..."
                 disabled={disabled}
                 autoFocus
                 onChange={(event) => {
@@ -59,7 +59,7 @@ export function MessageInput({
                 type="submit"
                 disabled={disabled}
             >
-                Send
+                Enviar
             </button>
         </form>
     );

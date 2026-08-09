@@ -37,10 +37,10 @@ export default function DetailsPage() {
 
                 <nav className={styles.navigation}>
                     <Link
-                        href="/about"
+                        href="/"
                         className={styles.backButton}
                     >
-                        Back to About
+                        Voltar para o Início
                     </Link>
                 </nav>
             </div>
