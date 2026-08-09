@@ -1,16 +1,38 @@
+/* ==========================================================================
+   Container Layout & Base Styles
+   ========================================================================== */
+
 .container {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 1rem;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.875rem 1.125rem;
+    min-height: 48px;
+    width: fit-content;
+    
+    background: var(--bg-surface, rgba(26, 26, 26, 0.75));
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color, rgba(217, 70, 239, 0.2));
+    border-left: 3px solid var(--accent-color, #d946ef);
+    border-radius: 1rem;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 
+/* ==========================================================================
+   Dots & Animation
+   ========================================================================== */
+
 .dot {
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.55rem;
+    height: 0.55rem;
     border-radius: 50%;
-    background-color: #6b7280;
-    animation: blink 1.2s infinite ease-in-out;
+    background: var(--dot-color, linear-gradient(135deg, #d946ef 0%, #9333ea 100%));
+    box-shadow: 0 0 8px var(--dot-glow, rgba(217, 70, 239, 0.4));
+    animation: typingWave 1.4s infinite ease-in-out both;
 }
 
 .dot:nth-child(2) {
@@ -21,14 +43,30 @@
     animation-delay: 0.4s;
 }
 
-@keyframes blink {
-    0%,
-    80%,
-    100% {
-        opacity: 0.3;
+@keyframes typingWave {
+    0%, 60%, 100% {
+        opacity: 0.35;
+        transform: translateY(0) scale(0.85);
     }
 
-    40% {
+    30% {
         opacity: 1;
+        transform: translateY(-4px) scale(1.15);
+        box-shadow: 0 0 12px var(--dot-glow, rgba(217, 70, 239, 0.7));
     }
+}
+
+/* ==========================================================================
+   Theme Variations
+   ========================================================================== */
+
+:global([data-theme="light"]) .container,
+:global(.light) .container,
+:global(.light-mode) .container {
+    --bg-surface: #ffffff;
+    --border-color: rgba(217, 70, 239, 0.3);
+    --accent-color: #d946ef;
+    --dot-color: linear-gradient(135deg, #d946ef 0%, #c026d3 100%);
+    --dot-glow: rgba(217, 70, 239, 0.25);
+    box-shadow: 0 4px 14px rgba(9, 9, 11, 0.1);
 }

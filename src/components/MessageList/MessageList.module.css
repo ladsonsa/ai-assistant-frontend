@@ -1,3 +1,7 @@
+/* ==========================================================================
+   Container Layout & Scrollbar
+   ========================================================================== */
+
 .container {
     display: flex;
     flex-direction: column;
@@ -5,4 +9,24 @@
     overflow-y: auto;
     flex: 1;
     padding: 1rem;
+    background: transparent;
+    transition: background 0.3s ease;
+}
+
+.container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background: var(--border-color, rgba(217, 70, 239, 0.2));
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+    background: var(--border-active, rgba(217, 70, 239, 0.5));
 }

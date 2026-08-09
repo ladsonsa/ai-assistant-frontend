@@ -1,42 +1,282 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { LoadingIndicator } from "@/components/LoadingIndicator/LoadingIndicator";
 import { MessageInput } from "@/components/MessageInput/MessageInput";
 import { MessageList } from "@/components/MessageList/MessageList";
 import { useChat } from "@/hooks/useChat";
+import { useTheme } from "@/hooks/useTheme";
 
 import styles from "./Chat.module.css";
 
+/**
+ * Interface representing a chat conversation record.
+ */
+interface Conversation {
+    /** Unique identifier for the conversation. */
+    readonly id: string;
+    /** Display title for the conversation history entry. */
+    readonly title: string;
+}
+
+/**
+ * Interface representing an extracted numeric calculation result.
+ */
+interface Result {
+    /** Unique key identifier generated for the extracted result. */
+    readonly id: string;
+    /** Extracted numeric string value. */
+    readonly value: string;
+}
+
+/**
+ * Extracts the last numeric value (integer or decimal) found within a message string.
+ *
+ * @param content The text content to search for numerical values.
+ * @returns The last matched numeric string, or `null` if no match is found.
+ */
+const extractNumericResult = (content: string): string | null => {
+    const matches = content.match(/-?\d+(?:[.,]\d+)?/g);
+
+    if (!matches || matches.length === 0) {
+        return null;
+    }
+
+    return matches[matches.length - 1];
+};
+
+/**
+ * Main chat page component featuring collapsible sidebars, conversation session management,
+ * theme toggling, and an extracted numerical result panel.
+ *
+ * @returns The rendered Chat view component.
+ */
 export function Chat() {
-    const {
-        messages,
-        isLoading,
-        error,
-        sendMessage,
-    } = useChat();
+    const { messages, isLoading, error, sendMessage } = useChat();
+    const { theme, toggleTheme } = useTheme();
+
+    const [isLeftOpen, setIsLeftOpen] = useState(true);
+    const [isRightOpen, setIsRightOpen] = useState(true);
+    const [conversations, setConversations] = useState<
+        readonly Conversation[]
+    >([
+        { id: "1", title: "Conversa principal" },
+    ]);
+    const [currentChatId, setCurrentChatId] = useState<string>("1");
+
+    /**
+     * Creates a new conversation item and sets it as the currently active chat.
+     */
+    const handleNewChat = () => {
+        const newId = Date.now().toString();
+        const nextNumber = conversations.length + 1;
+
+        const newConversation: Conversation = {
+            id: newId,
+            title: `Conversa ${nextNumber}`,
+        };
+
+        setConversations((prev) => [newConversation, ...prev]);
+        setCurrentChatId(newId);
+    };
+
+    /**
+     * Removes a specific conversation from the history list by its identifier.
+     *
+     * @param id The unique identifier of the conversation to delete.
+     * @param event Mouse event object to stop event bubbling.
+     */
+    const handleDeleteChat = (
+        id: string,
+        event: React.MouseEvent,
+    ) => {
+        event.stopPropagation();
+
+        setConversations((prev) => {
+            const updated = prev.filter(
+                (conversation) => conversation.id !== id,
+            );
+
+            if (currentChatId === id) {
+                setCurrentChatId(updated[0]?.id || "");
+            }
+
+            return updated;
+        });
+    };
+
+    /**
+     * Clears all conversations from state and resets the selected chat ID.
+     */
+    const handleDeleteAllChats = () => {
+        setConversations([]);
+        setCurrentChatId("");
+    };
+
+    /**
+     * Extracts and memoizes recent numerical calculation results from assistant messages.
+     */
+    const recentResults = useMemo<readonly Result[]>(() => {
+        return messages
+            .filter((message) => message.role === "assistant")
+            .map((message, index) => {
+                const value = extractNumericResult(message.content);
+
+                if (!value) {
+                    return null;
+                }
+
+                return {
+                    id: `${index}-${value}`,
+                    value,
+                };
+            })
+            .filter((result): result is Result => result !== null)
+            .reverse();
+    }, [messages]);
 
     return (
-        <section className={styles.container}>
-            <div className={styles.messages}>
-                <MessageList
-                    messages={messages}
+        <div
+            className={`${styles.layout} ${
+                theme === "light" ? styles.lightTheme : ""
+            }`}
+        >
+            <aside
+                className={`${styles.sidebar} ${
+                    !isLeftOpen ? styles.closed : ""
+                }`}
+            >
+                <button
+                    onClick={handleNewChat}
+                    className={styles.newChatButton}
+                >
+                    + Nova Conversa
+                </button>
+
+                <div className={styles.historyList}>
+                    {conversations.map((conversation) => (
+                        <div
+                            key={conversation.id}
+                            onClick={() => setCurrentChatId(conversation.id)}
+                            className={`${styles.historyItem} ${
+                                conversation.id === currentChatId
+                                    ? styles.active
+                                    : ""
+                            }`}
+                        >
+                            <span className={styles.historyTitle}>
+                                {conversation.title}
+                            </span>
+
+                            <button
+                                onClick={(event) =>
+                                    handleDeleteChat(
+                                        conversation.id,
+                                        event,
+                                    )
+                                }
+                                className={styles.deleteButton}
+                                title="Excluir conversa"
+                            >
+                                ×
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
+                {conversations.length > 0 && (
+                    <button
+                        onClick={handleDeleteAllChats}
+                        className={styles.deleteAllButton}
+                    >
+                        Excluir Todas
+                    </button>
+                )}
+            </aside>
+
+            <button
+                onClick={() =>
+                    setIsLeftOpen((prev) => !prev)
+                }
+                className={`${styles.toggleLeft} ${
+                    !isLeftOpen ? styles.closed : ""
+                }`}
+                title="Alternar Barra Lateral Esquerda"
+            >
+                {isLeftOpen ? "◀" : "▶"}
+            </button>
+
+            <section className={styles.container}>
+                <header className={styles.header}>
+                    <h1 className={styles.appTitle}>
+                        Calculadora IA
+                    </h1>
+
+                    <button
+                        onClick={toggleTheme}
+                        className={styles.themeButton}
+                        title="Alternar Tema"
+                    >
+                        {theme === "dark" ? "☀️" : "🌙"}
+                    </button>
+                </header>
+
+                <div className={styles.messages}>
+                    <MessageList messages={messages} />
+
+                    {isLoading && <LoadingIndicator />}
+
+                    {error && (
+                        <p className={styles.error}>
+                            {error}
+                        </p>
+                    )}
+                </div>
+
+                <MessageInput
+                    disabled={isLoading}
+                    onSend={sendMessage}
                 />
+            </section>
 
-                {isLoading && (
-                    <LoadingIndicator />
-                )}
+            <button
+                onClick={() =>
+                    setIsRightOpen((prev) => !prev)
+                }
+                className={`${styles.toggleRight} ${
+                    !isRightOpen ? styles.closed : ""
+                }`}
+                title="Alternar Painel Direito"
+            >
+                {isRightOpen ? "▶" : "◀"}
+            </button>
 
-                {error && (
-                    <p className={styles.error}>
-                        {error}
-                    </p>
-                )}
-            </div>
+            <aside
+                className={`${styles.rightSidebar} ${
+                    !isRightOpen ? styles.closed : ""
+                }`}
+            >
+                <div className={styles.boxSection}>
+                    <h3>Últimos Resultados</h3>
 
-            <MessageInput
-                disabled={isLoading}
-                onSend={sendMessage}
-            />
-        </section>
+                    <div className={styles.resultsList}>
+                        {recentResults.length === 0 ? (
+                            <div className={styles.resultBox}>
+                                Nenhum cálculo recente.
+                            </div>
+                        ) : (
+                            recentResults.map((result) => (
+                                <div
+                                    key={result.id}
+                                    className={styles.resultBox}
+                                >
+                                    {result.value}
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+            </aside>
+        </div>
     );
 }

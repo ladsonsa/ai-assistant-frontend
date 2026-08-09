@@ -1,0 +1,135 @@
+/* ==========================================================================
+   Layout & Themes
+   ========================================================================== */
+
+.main {
+    --bg-color: #050505;
+    --card-bg: rgba(26, 26, 26, 0.75);
+    --card-border: rgba(217, 70, 239, 0.3);
+    --text-primary: #ffffff;
+    --text-secondary: #a3a3a3;
+    --button-bg: linear-gradient(135deg, #d946ef 0%, #9333ea 100%);
+    --button-color: #ffffff;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 24px;
+    position: relative;
+    background-color: var(--bg-color);
+    transition: background-color 0.3s ease;
+}
+
+:global(body.light) .main {
+    --bg-color: #ffffff;
+    --card-bg: rgba(244, 244, 245, 0.9);
+    --card-border: rgba(217, 70, 239, 0.3);
+    --text-primary: #09090b;
+    --text-secondary: #52525b;
+    --button-bg: linear-gradient(135deg, #d946ef 0%, #c026d3 100%);
+    --button-color: #ffffff;
+}
+
+/* ==========================================================================
+   Components: Container & Content Sections
+   ========================================================================== */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 720px;
+    width: 100%;
+    padding: 48px 36px;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #d946ef 0%, #a855f7 50%, #701a75 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--text-primary);
+}
+
+.section {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+
+.section h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.section p, .section li {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+/* ==========================================================================
+   Components: Navigation & Actions
+   ========================================================================== */
+
+.navigation {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.backButton {
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--button-color);
+    background: var(--button-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 4px 14px rgba(217, 70, 239, 0.25);
+    transition: all 0.25s ease;
+}
+
+.backButton:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.secretLink {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    font-size: 1.5rem;
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.secretLink:hover {
+    opacity: 1;
+    transform: scale(1.15);
+}
