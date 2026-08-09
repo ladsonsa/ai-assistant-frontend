@@ -4,6 +4,13 @@ import Link from "next/link";
 import { useTheme } from "@/hooks/useTheme";
 import styles from "@/styles/Home.module.css";
 
+/**
+ * Landing page component for the AI Assistant platform.
+ * Displays product highlights, feature summaries, and navigation links,
+ * while respecting the user's active visual theme selection.
+ *
+ * @returns The rendered home page view component.
+ */
 export default function HomePage() {
     const { theme, toggleTheme } = useTheme();
 

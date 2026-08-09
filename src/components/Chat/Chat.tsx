@@ -9,16 +9,32 @@ import { useTheme } from "@/hooks/useTheme";
 
 import styles from "./Chat.module.css";
 
+/**
+ * Interface representing a chat conversation record.
+ */
 interface Conversation {
+    /** Unique identifier for the conversation. */
     readonly id: string;
+    /** Display title for the conversation history entry. */
     readonly title: string;
 }
 
+/**
+ * Interface representing an extracted numeric calculation result.
+ */
 interface Result {
+    /** Unique key identifier generated for the extracted result. */
     readonly id: string;
+    /** Extracted numeric string value. */
     readonly value: string;
 }
 
+/**
+ * Extracts the last numeric value (integer or decimal) found within a message string.
+ *
+ * @param content The text content to search for numerical values.
+ * @returns The last matched numeric string, or `null` if no match is found.
+ */
 const extractNumericResult = (content: string): string | null => {
     const matches = content.match(/-?\d+(?:[.,]\d+)?/g);
 
@@ -29,6 +45,12 @@ const extractNumericResult = (content: string): string | null => {
     return matches[matches.length - 1];
 };
 
+/**
+ * Main chat page component featuring collapsible sidebars, conversation session management,
+ * theme toggling, and an extracted numerical result panel.
+ *
+ * @returns The rendered Chat view component.
+ */
 export function Chat() {
     const { messages, isLoading, error, sendMessage } = useChat();
     const { theme, toggleTheme } = useTheme();
@@ -42,6 +64,9 @@ export function Chat() {
     ]);
     const [currentChatId, setCurrentChatId] = useState<string>("1");
 
+    /**
+     * Creates a new conversation item and sets it as the currently active chat.
+     */
     const handleNewChat = () => {
         const newId = Date.now().toString();
         const nextNumber = conversations.length + 1;
@@ -55,6 +80,12 @@ export function Chat() {
         setCurrentChatId(newId);
     };
 
+    /**
+     * Removes a specific conversation from the history list by its identifier.
+     *
+     * @param id The unique identifier of the conversation to delete.
+     * @param event Mouse event object to stop event bubbling.
+     */
     const handleDeleteChat = (
         id: string,
         event: React.MouseEvent,
@@ -74,11 +105,17 @@ export function Chat() {
         });
     };
 
+    /**
+     * Clears all conversations from state and resets the selected chat ID.
+     */
     const handleDeleteAllChats = () => {
         setConversations([]);
         setCurrentChatId("");
     };
 
+    /**
+     * Extracts and memoizes recent numerical calculation results from assistant messages.
+     */
     const recentResults = useMemo<readonly Result[]>(() => {
         return messages
             .filter((message) => message.role === "assistant")

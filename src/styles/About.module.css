@@ -1,3 +1,7 @@
+/* ==========================================================================
+   Layout & Themes
+   ========================================================================== */
+
 .main {
     --bg-color: #050505;
     --card-bg: rgba(26, 26, 26, 0.75);
@@ -19,7 +23,6 @@
     transition: background-color 0.3s ease;
 }
 
-/* Suporte ao Modo Claro global via body com magenta, branco e preto */
 :global(body.light) .main {
     --bg-color: #ffffff;
     --card-bg: rgba(244, 244, 245, 0.9);
@@ -27,8 +30,12 @@
     --text-primary: #09090b;
     --text-secondary: #52525b;
     --button-bg: linear-gradient(135deg, #d946ef 0%, #c026d3 100%);
-    --button-color: #09090b;
+    --button-color: #ffffff;
 }
+
+/* ==========================================================================
+   Components: Container & Content Sections
+   ========================================================================== */
 
 .container {
     display: flex;
@@ -82,6 +89,10 @@
     list-style-type: disc;
     padding-left: 20px;
 }
+
+/* ==========================================================================
+   Components: Navigation & Actions
+   ========================================================================== */
 
 .navigation {
     margin-top: 2rem;

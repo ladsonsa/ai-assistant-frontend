@@ -1,3 +1,7 @@
+/* ==========================================================================
+   CSS Variables & Theming Tokens
+   ========================================================================== */
+
 :root {
     --bg-main: #050505;
     --bg-radial: radial-gradient(circle at 50% 0%, #171717 0%, #050505 70%);
@@ -26,6 +30,10 @@
     --glow-color: rgba(217, 70, 239, 0.1);
 }
 
+/* ==========================================================================
+   Base Layout Structure
+   ========================================================================== */
+
 .layout {
     display: flex;
     justify-content: center;
@@ -38,6 +46,32 @@
     position: relative;
     transition: background 0.3s ease, color 0.3s ease;
 }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    max-width: 860px;
+    padding: 20px 32px;
+    margin-left: 260px;
+    margin-right: 260px;
+    overflow: hidden;
+    z-index: 1;
+    transition: margin 0.35s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.35s ease;
+}
+
+.sidebar.closed ~ .container {
+    margin-left: auto;
+}
+
+.rightSidebar.closed ~ .container {
+    margin-right: auto;
+}
+
+/* ==========================================================================
+   Sidebars & Panels
+   ========================================================================== */
 
 .sidebar,
 .rightSidebar {
@@ -81,6 +115,10 @@
     transform: translateX(100%);
 }
 
+/* ==========================================================================
+   Toggles & Controls
+   ========================================================================== */
+
 .toggleLeft,
 .toggleRight {
     position: absolute;
@@ -115,30 +153,9 @@
     transform: scale(1.05);
 }
 
-/* Chat central com largura agradável e margens dinâmicas baseadas nas sidebars */
-.container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100%;
-    max-width: 860px;
-    padding: 20px 32px;
-    margin-left: 260px;
-    margin-right: 260px;
-    overflow: hidden;
-    z-index: 1;
-    transition: margin 0.35s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.35s ease;
-}
-
-/* Quando a sidebar esquerda estiver fechada, remove a margem esquerda correspondente */
-.sidebar.closed ~ .container {
-    margin-left: auto;
-}
-
-/* Quando a sidebar direita estiver fechada, remove a margem direita correspondente */
-.rightSidebar.closed ~ .container {
-    margin-right: auto;
-}
+/* ==========================================================================
+   Header & Action Buttons
+   ========================================================================== */
 
 .header {
     display: flex;
@@ -195,6 +212,28 @@
     transform: translateY(-1px);
     box-shadow: 0 6px 18px rgba(217, 70, 239, 0.45);
 }
+
+.deleteAllButton {
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.deleteAllButton:hover {
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* ==========================================================================
+   History List Items
+   ========================================================================== */
 
 .historyList {
     display: flex;
@@ -271,23 +310,9 @@
     background: rgba(248, 113, 113, 0.15);
 }
 
-.deleteAllButton {
-    background: transparent;
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    color: #ef4444;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-
-.deleteAllButton:hover {
-    background: #ef4444;
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-}
+/* ==========================================================================
+   Messages & Sections
+   ========================================================================== */
 
 .messages {
     flex: 1;
@@ -332,6 +357,10 @@
     flex-direction: column;
     gap: 10px;
 }
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
 
 @media (max-width: 1024px) {
     .container {

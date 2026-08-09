@@ -1,24 +1,43 @@
 import Link from "next/link";
 import styles from "@/styles/About.module.css";
 
-// Tipagem estrita para garantir segurança e escalabilidade (Padrão de Mercado)
+/**
+ * Base properties shared across all about section data types.
+ */
 interface BaseSection {
+    /** The heading title for the section. */
     title: string;
 }
 
+/**
+ * Section data variant containing plain paragraph text content.
+ */
 interface TextSection extends BaseSection {
+    /** Discriminator identifier for text-based content. */
     type: "text";
+    /** The main text content to render within the section paragraph. */
     content: string;
 }
 
+/**
+ * Section data variant containing an ordered or unordered itemized list.
+ */
 interface ListSection extends BaseSection {
+    /** Discriminator identifier for list-based content. */
     type: "list";
+    /** Array of string items to be rendered as bullet points. */
     items: string[];
 }
 
+/**
+ * Discriminated union type representing valid structural layouts for about page sections.
+ */
 type SectionData = TextSection | ListSection;
 
-// Dados sincronizados com a documentação oficial do projeto (README)
+/**
+ * Structured content sections detailing project overview, architectural principles,
+ * technology stack, and engineering objectives.
+ */
 const ABOUT_SECTIONS: SectionData[] = [
     {
         title: "Visão Geral",
@@ -64,6 +83,12 @@ const ABOUT_SECTIONS: SectionData[] = [
     },
 ];
 
+/**
+ * Static About page view component presenting architectural choices,
+ * technical stack information, and project goals.
+ *
+ * @returns The rendered About page view.
+ */
 export default function AboutPage() {
     return (
         <main className={styles.main}>

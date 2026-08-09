@@ -1,6 +1,12 @@
 import Link from "next/link";
 import styles from "@/styles/About.module.css";
 
+/**
+ * Secret easter egg page component rendering a personal dedication and special thanks
+ * to community members and collaborators.
+ *
+ * @returns The rendered secret details page view.
+ */
 export default function DetailsPage() {
     return (
         <main className={styles.main}>

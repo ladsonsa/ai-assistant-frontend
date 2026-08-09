@@ -3,10 +3,23 @@ import { MessageRole } from "@/domain/entities/MessageRole";
 
 import styles from "./MessageBubble.module.css";
 
+/**
+ * Props interface for the {@link MessageBubble} component.
+ */
 interface MessageBubbleProps {
+    /**
+     * The Message entity instance to be displayed within the bubble.
+     */
     readonly message: Message;
 }
 
+/**
+ * Component that renders an individual chat message bubble along with
+ * a role-specific visual avatar (User vs Assistant).
+ *
+ * @param props The component properties containing the message domain entity.
+ * @returns The rendered message bubble row component.
+ */
 export function MessageBubble({
     message,
 }: MessageBubbleProps) {

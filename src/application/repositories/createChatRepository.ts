@@ -5,9 +5,10 @@ import { createChatApi } from "@/application/api/createChatApi";
 import { env } from "@/config/env";
 
 /**
- * Factory function that instantiates and configures a concrete ChatRepository instance using the HTTP implementation.
+ * Factory function that instantiates and returns an appropriate ChatRepository implementation
+ * based on the current environment configuration.
  *
- * @returns A fully initialized implementation of the ChatRepository contract.
+ * @returns A MockChatRepository instance if the mock environment flag is enabled; otherwise, an HttpChatRepository instance.
  */
 export function createChatRepository(): ChatRepository {
     if (env.useMock) {
