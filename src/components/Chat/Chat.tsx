@@ -52,7 +52,17 @@ const extractNumericResult = (content: string): string | null => {
  * @returns The rendered Chat view component.
  */
 export function Chat() {
-    const { messages, isLoading, error, sendMessage } = useChat();
+    const {
+        messages,
+        currentConversationId,
+        isLoading,
+        error,
+        sendMessage,
+        createConversation,
+        selectConversation,
+        deleteConversation,
+        clearConversations,
+    } = useChat();
     const { theme, toggleTheme } = useTheme();
 
     const [isLeftOpen, setIsLeftOpen] = useState(true);
@@ -62,10 +72,9 @@ export function Chat() {
     >([
         { id: "1", title: "Conversa principal" },
     ]);
-    const [currentChatId, setCurrentChatId] = useState<string>("1");
 
     /**
-     * Creates a new conversation item and sets it as the currently active chat.
+     * Creates a new conversation item and sets it as the currently active chat in hook state.
      */
     const handleNewChat = () => {
         const newId = Date.now().toString();
@@ -77,11 +86,18 @@ export function Chat() {
         };
 
         setConversations((prev) => [newConversation, ...prev]);
-        setCurrentChatId(newId);
+        createConversation(newId);
     };
 
     /**
-     * Removes a specific conversation from the history list by its identifier.
+     * Handles switching active conversation.
+     */
+    const handleSelectChat = (id: string) => {
+        selectConversation(id);
+    };
+
+    /**
+     * Removes a specific conversation from the history list by its identifier and hook state.
      *
      * @param id The unique identifier of the conversation to delete.
      * @param event Mouse event object to stop event bubbling.
@@ -92,13 +108,18 @@ export function Chat() {
     ) => {
         event.stopPropagation();
 
+        deleteConversation(id);
+
         setConversations((prev) => {
             const updated = prev.filter(
                 (conversation) => conversation.id !== id,
             );
 
-            if (currentChatId === id) {
-                setCurrentChatId(updated[0]?.id || "");
+            if (currentConversationId === id) {
+                const nextChatId = updated[0]?.id || "";
+                if (nextChatId) {
+                    selectConversation(nextChatId);
+                }
             }
 
             return updated;
@@ -106,11 +127,11 @@ export function Chat() {
     };
 
     /**
-     * Clears all conversations from state and resets the selected chat ID.
+     * Clears all conversations from UI and resets state in hook.
      */
     const handleDeleteAllChats = () => {
+        clearConversations();
         setConversations([]);
-        setCurrentChatId("");
     };
 
     /**
@@ -157,9 +178,9 @@ export function Chat() {
                     {conversations.map((conversation) => (
                         <div
                             key={conversation.id}
-                            onClick={() => setCurrentChatId(conversation.id)}
+                            onClick={() => handleSelectChat(conversation.id)}
                             className={`${styles.historyItem} ${
-                                conversation.id === currentChatId
+                                conversation.id === currentConversationId
                                     ? styles.active
                                     : ""
                             }`}
@@ -234,7 +255,7 @@ export function Chat() {
                 </div>
 
                 <MessageInput
-                    disabled={isLoading}
+                    disabled={isLoading || !currentConversationId}
                     onSend={sendMessage}
                 />
             </section>
