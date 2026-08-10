@@ -1,37 +1,50 @@
 import { Message } from "@/domain/entities/Message";
+import { MessageRole } from "@/domain/entities/MessageRole";
 import { ChatRepository } from "@/domain/repositories/ChatRepository";
-import { ChatApi } from "@/infrastructure/api/ChatApi";
-import { MessageMapper } from "@/infrastructure/mappers/MessageMapper";
+import { ChatApi } from "../api/ChatApi";
+import { ChatMessageDto, ChatRequestDto } from "../api/dto/ChatDto";
 
 /**
- * Concrete implementation of the ChatRepository interface that delivers
- * conversation histories to a remote API provider over HTTP using domain mappers.
+ * Concrete implementation of the {@link ChatRepository} interface that uses
+ * the HTTP {@link ChatApi} to transmit conversation histories and receive responses.
  */
 export class HttpChatRepository implements ChatRepository {
-    /**
-     * Initializes a new instance of the HttpChatRepository class.
-     *
-     * @param api The ChatApi client used to perform HTTP network requests.
-     */
-    public constructor(
-        private readonly api: ChatApi,
-    ) {}
+  /** The HTTP API client instance used to make backend network calls. */
+  private readonly chatApi: ChatApi;
 
-    /**
-     * Maps the conversation history to a request payload, sends it to the API,
-     * and maps the returned response back into a domain Message entity.
-     *
-     * @param history An immutable array of Message entities representing the conversation context.
-     * @returns A promise that resolves to the newly created assistant Message domain entity.
-     * @throws {Error} If the underlying HTTP request or mapper translation fails.
-     */
-    public async sendConversation(
-        history: readonly Message[],
-    ): Promise<Message> {
-        const request = MessageMapper.toChatRequest(history);
+  /**
+   * Constructs a new {@link HttpChatRepository} instance.
+   *
+   * @param chatApi The API client instance handling network communication.
+   */
+  constructor(chatApi: ChatApi) {
+    this.chatApi = chatApi;
+  }
 
-        const response = await this.api.sendConversation(request);
+  /**
+   * Maps domain message entities to DTO format, sends the conversation history
+   * over HTTP via {@link ChatApi}, and returns the assistant's reply as a new {@link Message} entity.
+   *
+   * @param history The immutable list of historical domain {@link Message} entities to transmit.
+   * @returns A promise resolving to the generated assistant {@link Message} entity.
+   */
+  public async sendConversation(
+    history: readonly Message[]
+  ): Promise<Message> {
+    const chatMessageDtos: ChatMessageDto[] = history.map((message) => ({
+      role: message.role === MessageRole.USER ? "user" : "assistant",
+      content: message.content,
+      metadata: {},
+    }));
 
-        return MessageMapper.toDomain(response);
-    }
+    const requestDto: ChatRequestDto = { history: chatMessageDtos };
+    const responseDto = await this.chatApi.sendConversation(requestDto);
+
+    return new Message(
+      crypto.randomUUID(),
+      MessageRole.ASSISTANT,
+      responseDto.content,
+      {}
+    );
+  }
 }

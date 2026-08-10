@@ -1,10 +1,12 @@
+import { env } from "@/config/env";
 import { ChatApi } from "@/infrastructure/api/ChatApi";
 
 /**
- * Factory function that instantiates and returns a new {@link ChatApi} HTTP client instance.
+ * Factory function that instantiates and returns a configured {@link ChatApi} instance
+ * initialized with the global environment's base API URL.
  *
- * @returns A fresh instance of the ChatApi service.
+ * @returns A new instance of {@link ChatApi} configured with the base environment API URL.
  */
-export function createChatApi(): ChatApi {
-    return new ChatApi();
-}
+export const createChatApi = (): ChatApi => {
+  return new ChatApi(env.apiUrl);
+};
