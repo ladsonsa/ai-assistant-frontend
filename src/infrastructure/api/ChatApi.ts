@@ -1,22 +1,32 @@
-import { env } from "@/config/env";
-import { ChatRequest } from "./dto/ChatRequest";
-import { ChatResponse } from "./dto/ChatResponse";
+import { ChatRequestDto, ChatResponseDto } from "./dto/ChatDto";
 
 /**
- * Service class responsible for managing HTTP network operations with the chat API endpoint.
+ * Infrastructure client for handling HTTP communication with remote Chat API endpoints.
  */
 export class ChatApi {
+    /** The base network URL for API endpoint requests. */
+    private readonly baseUrl: string;
+
     /**
-     * Sends a full conversation payload to the remote backend service via an HTTP POST request.
+     * Constructs a new {@link ChatApi} service instance.
      *
-     * @param request The data transfer object containing the conversation history payload.
-     * @returns A promise that resolves to the parsed ChatResponse object from the server.
-     * @throws {Error} If the HTTP response status indicates a failure (non-2xx status code).
+     * @param baseUrl The base URL of the backend web service.
+     */
+    constructor(baseUrl: string) {
+        this.baseUrl = baseUrl;
+    }
+
+    /**
+     * Transmits a conversation history payload to the API server and retrieves the assistant's reply.
+     *
+     * @param request The {@link ChatRequestDto} containing the array of message history.
+     * @returns A promise resolving to the {@link ChatResponseDto} returned by the server.
+     * @throws {Error} If the HTTP response is not successful (`!response.ok`).
      */
     public async sendConversation(
-        request: ChatRequest,
-    ): Promise<ChatResponse> {
-        const response = await fetch(`${env.apiUrl}/chat`, {
+        request: ChatRequestDto
+    ): Promise<ChatResponseDto> {
+        const response = await fetch(`${this.baseUrl}/chat`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -28,6 +38,6 @@ export class ChatApi {
             throw new Error("Unable to communicate with the server.");
         }
 
-        return response.json() as Promise<ChatResponse>;
+        return response.json() as Promise<ChatResponseDto>;
     }
 }
