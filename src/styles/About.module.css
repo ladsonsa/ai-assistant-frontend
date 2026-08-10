@@ -133,3 +133,107 @@
     opacity: 1;
     transform: scale(1.15);
 }
+
+/* ==========================================================================
+   Component: Lock Button (Transparent & Static)
+   ========================================================================== */
+
+.lockButton {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: default;
+    display: inline-block;
+    font-size: inherit;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    -webkit-text-fill-color: initial;
+    color: inherit;
+}
+
+.lockButton:hover,
+.lockButton:focus,
+.lockButton:active {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: default;
+    transform: none;
+    outline: none;
+    box-shadow: none;
+    filter: none;
+    color: inherit;
+}
+
+/* ==========================================================================
+   Component: Secret Love Card (Theme Adapted)
+   ========================================================================== */
+
+.secretCard {
+    font-family: Georgia, serif;
+    color: var(--text-primary);
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: var(--card-inner-bg, rgba(255, 249, 251, 0.05));
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+:global(body.light) .secretCard {
+    background-color: #fff9fb;
+    border: 1px solid #f2d6df;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.secretSubtitle {
+    font-size: 22px;
+    color: #e879f9;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+}
+
+:global(body.light) .secretSubtitle {
+    color: #b85c7a;
+}
+
+.secretDivider {
+    border: none;
+    border-top: 1px solid var(--card-border);
+    width: 50px;
+    margin: 0 auto 25px auto;
+}
+
+.secretText {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.secretHighlight {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #e879f9;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+:global(body.light) .secretHighlight {
+    color: #b85c7a;
+}
+
+.section h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    text-align: center; /* Centraliza o título */
+}
