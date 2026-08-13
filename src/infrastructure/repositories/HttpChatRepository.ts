@@ -5,28 +5,29 @@ import { ChatApi } from "../api/ChatApi";
 import { ChatMessageDto, ChatRequestDto } from "../api/dto/ChatDto";
 
 /**
- * Concrete implementation of the {@link ChatRepository} interface that uses
- * the HTTP {@link ChatApi} to transmit conversation histories and receive responses.
+ * Concrete implementation of the {@link ChatRepository} interface that relies on
+ * the HTTP {@link ChatApi} to send conversation histories and map assistant responses.
  */
 export class HttpChatRepository implements ChatRepository {
-  /** The HTTP API client instance used to make backend network calls. */
+  /** The HTTP API client instance used to handle network operations. */
   private readonly chatApi: ChatApi;
 
   /**
    * Constructs a new {@link HttpChatRepository} instance.
    *
-   * @param chatApi The API client instance handling network communication.
+   * @param chatApi The HTTP API client handling underlying network communications.
    */
   constructor(chatApi: ChatApi) {
     this.chatApi = chatApi;
   }
 
   /**
-   * Maps domain message entities to DTO format, sends the conversation history
-   * over HTTP via {@link ChatApi}, and returns the assistant's reply as a new {@link Message} entity.
+   * Transforms domain message entities and their associated metadata into DTO payloads,
+   * sends the history via {@link ChatApi.sendConversation}, and maps the returned response
+   * into a new assistant {@link Message} domain entity.
    *
    * @param history The immutable list of historical domain {@link Message} entities to transmit.
-   * @returns A promise resolving to the generated assistant {@link Message} entity.
+   * @returns A promise resolving to the generated assistant {@link Message} domain entity.
    */
   public async sendConversation(
     history: readonly Message[]
@@ -34,7 +35,7 @@ export class HttpChatRepository implements ChatRepository {
     const chatMessageDtos: ChatMessageDto[] = history.map((message) => ({
       role: message.role === MessageRole.USER ? "user" : "assistant",
       content: message.content,
-      metadata: {},
+      metadata: message.metadata,
     }));
 
     const requestDto: ChatRequestDto = { history: chatMessageDtos };
@@ -44,7 +45,7 @@ export class HttpChatRepository implements ChatRepository {
       crypto.randomUUID(),
       MessageRole.ASSISTANT,
       responseDto.content,
-      {}
+      responseDto.metadata
     );
   }
 }
