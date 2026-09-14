@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { sendConversationUseCase } from "@/application/container";
+import { createSendConversationUseCase } from "@/application/usecases/createSendConversationUseCase";
 import { Message } from "@/domain/entities/Message";
 import { MessageRole } from "@/domain/entities/MessageRole";
 
@@ -46,6 +46,11 @@ export function useChat(): UseChatReturn {
         useState<string>("1");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const sendConversationUseCase = useMemo(
+        () => createSendConversationUseCase(),
+        [],
+    );
 
     const messages = useMemo(
         () => conversationMessages[currentConversationId] ?? [],
@@ -164,6 +169,7 @@ export function useChat(): UseChatReturn {
         [
             currentConversationId,
             messages,
+            sendConversationUseCase,
         ],
     );
 
