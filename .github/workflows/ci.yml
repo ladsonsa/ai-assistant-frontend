@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           # Keep the CI runtime aligned with the project's supported Node.js version.
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
