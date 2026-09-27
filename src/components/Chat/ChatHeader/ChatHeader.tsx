@@ -1,8 +1,8 @@
 "use client";
 
-import type { Theme } from "@/hooks/useTheme";
-
 import styles from "./ChatHeader.module.css";
+
+type Theme = "dark" | "light";
 
 /**
  * Properties for the {@link ChatHeader} component.
