@@ -1,0 +1,41 @@
+# Frontend CI pipeline for pull request and branch validation.
+# Runs automated quality checks before changes are integrated into the project.
+
+name: Frontend CI
+
+on:
+  push:
+  pull_request:
+    - dev
+    - main
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # Keep the CI runtime aligned with the project's supported Node.js version.
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests with coverage
+        run: npm run test:coverage
+
+      # The production build validates that the application can be compiled successfully.
+      - name: Build
+        run: npm run build
