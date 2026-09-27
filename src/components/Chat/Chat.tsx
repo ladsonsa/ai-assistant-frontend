@@ -3,6 +3,7 @@
 import { useMemo, useState, type MouseEvent } from "react";
 
 import { LoadingIndicator } from "@/components/LoadingIndicator/LoadingIndicator";
+import { ChatContextPanel } from "@/components/Chat/ChatContextPanel/ChatContextPanel";
 import { ChatHeader } from "@/components/Chat/ChatHeader/ChatHeader";
 import { ChatHistory } from "@/components/Chat/ChatHistory/ChatHistory";
 import { MessageInput } from "@/components/MessageInput/MessageInput";
@@ -235,137 +236,12 @@ export function Chat() {
                 />
             </section>
 
-            <aside
-                className={
-                    styles.rightSidebar
+            <ChatContextPanel
+                conversationTitle={
+                    currentConversation?.title ?? null
                 }
-                aria-label="Contexto da conversa"
-            >
-                <div
-                    className={
-                        styles.rightSidebarHeader
-                    }
-                >
-                    <span
-                        className={
-                            styles.panelEyebrow
-                        }
-                    >
-                        CONTEXTO
-                    </span>
-
-                    <h2
-                        className={
-                            styles.rightSidebarTitle
-                        }
-                    >
-                        {currentConversation?.title ??
-                            "Nenhuma conversa"}
-                    </h2>
-                </div>
-
-                <div
-                    className={
-                        styles.contextSummary
-                    }
-                >
-                    <span
-                        className={
-                            styles.contextLabel
-                        }
-                    >
-                        Resultados encontrados
-                    </span>
-
-                    <strong
-                        className={
-                            styles.contextCount
-                        }
-                    >
-                        {recentResults.length}
-                    </strong>
-                </div>
-
-                <section
-                    className={
-                        styles.boxSection
-                    }
-                >
-                    <h3>
-                        Últimos resultados
-                    </h3>
-
-                    <div
-                        className={
-                            styles.resultsList
-                        }
-                    >
-                        {recentResults.length ===
-                        0 ? (
-                            <div
-                                className={
-                                    styles.emptyResult
-                                }
-                            >
-                                <strong>
-                                    Nenhum resultado
-                                    ainda.
-                                </strong>
-
-                                <span>
-                                    Os resultados desta
-                                    conversa aparecerão
-                                    aqui.
-                                </span>
-                            </div>
-                        ) : (
-                            recentResults.map(
-                                (
-                                    result,
-                                    index,
-                                ) => (
-                                    <article
-                                        key={
-                                            result.id
-                                        }
-                                        className={
-                                            styles.resultBox
-                                        }
-                                    >
-                                        <div
-                                            className={
-                                                styles.resultMeta
-                                            }
-                                        >
-                                            <span>
-                                                Resultado #
-                                                {recentResults.length -
-                                                    index}
-                                            </span>
-
-                                            <span>
-                                                {
-                                                    currentConversation?.title
-                                                }
-                                            </span>
-                                        </div>
-
-                                        <strong
-                                            className={
-                                                styles.resultValue
-                                            }
-                                        >
-                                            {
-                                                result.value
-                                            }
-                                        </strong>
-                                    </article>
-                                ),
-                            )
-                        )}
-                    </div>
-                </section>
-            </aside>
+                results={recentResults}
+            />
         </div>
     );
 }
