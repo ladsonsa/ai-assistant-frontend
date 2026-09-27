@@ -4,6 +4,7 @@ import { useMemo, useState, type MouseEvent } from "react";
 
 import { LoadingIndicator } from "@/components/LoadingIndicator/LoadingIndicator";
 import { ChatHeader } from "@/components/Chat/ChatHeader/ChatHeader";
+import { ChatHistory } from "@/components/Chat/ChatHistory/ChatHistory";
 import { MessageInput } from "@/components/MessageInput/MessageInput";
 import { MessageList } from "@/components/MessageList/MessageList";
 import { useChat } from "@/hooks/useChat";
@@ -11,15 +12,18 @@ import { useTheme } from "@/hooks/useTheme";
 
 import styles from "./Chat.module.css";
 
-
 /**
  * Interface representing an extracted numeric calculation result.
  */
 interface Result {
-    /** Unique key identifier generated for the extracted result. */
+    /**
+     * Unique key identifier generated for the extracted result.
+     */
     readonly id: string;
 
-    /** Extracted numeric string value. */
+    /**
+     * Extracted numeric string value.
+     */
     readonly value: string;
 }
 
@@ -77,7 +81,8 @@ export function Chat() {
         () =>
             conversations.find(
                 (conversation) =>
-                    conversation.id === currentConversationId,
+                    conversation.id ===
+                    currentConversationId,
             ) ?? null,
         [conversations, currentConversationId],
     );
@@ -87,7 +92,6 @@ export function Chat() {
      */
     const handleNewChat = () => {
         const newId = Date.now().toString();
-
         createConversation(newId);
     };
 
@@ -106,7 +110,6 @@ export function Chat() {
         event: MouseEvent,
     ) => {
         event.stopPropagation();
-
         deleteConversation(id);
     };
 
@@ -116,7 +119,7 @@ export function Chat() {
     const handleDeleteAllChats = () => {
         clearConversations();
     };
-    
+
     /**
      * Extracts numerical results from assistant messages
      * belonging to the currently selected conversation.
@@ -161,91 +164,19 @@ export function Chat() {
                     : ""
             }`}
         >
-            <aside
-                className={`${styles.sidebar} ${
-                    !isLeftOpen
-                        ? styles.closed
-                        : ""
-                }`}
-            >
-                <button
-                    onClick={handleNewChat}
-                    className={
-                        styles.newChatButton
-                    }
-                >
-                    + Nova Conversa
-                </button>
-
-                <div
-                    className={
-                        styles.historyList
-                    }
-                >
-                    {conversations.map(
-                        (conversation) => (
-                            <div
-                                key={
-                                    conversation.id
-                                }
-                                onClick={() =>
-                                    handleSelectChat(
-                                        conversation.id,
-                                    )
-                                }
-                                className={`${
-                                    styles.historyItem
-                                } ${
-                                    conversation.id ===
-                                    currentConversationId
-                                        ? styles.active
-                                        : ""
-                                }`}
-                            >
-                                <span
-                                    className={
-                                        styles.historyTitle
-                                    }
-                                >
-                                    {
-                                        conversation.title
-                                    }
-                                </span>
-
-                                <button
-                                    onClick={(
-                                        event,
-                                    ) =>
-                                        handleDeleteChat(
-                                            conversation.id,
-                                            event,
-                                        )
-                                    }
-                                    className={
-                                        styles.deleteButton
-                                    }
-                                    title="Excluir conversa"
-                                >
-                                    ×
-                                </button>
-                            </div>
-                        ),
-                    )}
-                </div>
-
-                {conversations.length > 0 && (
-                    <button
-                        onClick={
-                            handleDeleteAllChats
-                        }
-                        className={
-                            styles.deleteAllButton
-                        }
-                    >
-                        Excluir Todas
-                    </button>
-                )}
-            </aside>
+            <ChatHistory
+                conversations={conversations}
+                currentConversationId={
+                    currentConversationId
+                }
+                onNewChat={handleNewChat}
+                onSelectChat={handleSelectChat}
+                onDeleteChat={handleDeleteChat}
+                onDeleteAllChats={
+                    handleDeleteAllChats
+                }
+                isOpen={isLeftOpen}
+            />
 
             <button
                 onClick={() =>
