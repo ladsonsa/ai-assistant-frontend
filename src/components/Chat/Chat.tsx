@@ -10,16 +10,6 @@ import { useTheme } from "@/hooks/useTheme";
 
 import styles from "./Chat.module.css";
 
-/**
- * Interface representing a chat conversation record.
- */
-interface Conversation {
-    /** Unique identifier for the conversation. */
-    readonly id: string;
-
-    /** Display title for the conversation history entry. */
-    readonly title: string;
-}
 
 /**
  * Interface representing an extracted numeric calculation result.
@@ -60,6 +50,7 @@ const extractNumericResult = (
  */
 export function Chat() {
     const {
+        conversations,
         messages,
         currentConversationId,
         isLoading,
@@ -74,15 +65,6 @@ export function Chat() {
     const { theme, toggleTheme } = useTheme();
 
     const [isLeftOpen, setIsLeftOpen] = useState(true);
-
-    const [conversations, setConversations] = useState<
-        readonly Conversation[]
-    >([
-        {
-            id: "1",
-            title: "Conversa principal",
-        },
-    ]);
 
     /**
      * Currently selected conversation.
@@ -104,17 +86,6 @@ export function Chat() {
      */
     const handleNewChat = () => {
         const newId = Date.now().toString();
-        const nextNumber = conversations.length + 1;
-
-        const newConversation: Conversation = {
-            id: newId,
-            title: `Conversa ${nextNumber}`,
-        };
-
-        setConversations((prev) => [
-            newConversation,
-            ...prev,
-        ]);
 
         createConversation(newId);
     };
@@ -136,24 +107,6 @@ export function Chat() {
         event.stopPropagation();
 
         deleteConversation(id);
-
-        setConversations((prev) => {
-            const updated = prev.filter(
-                (conversation) =>
-                    conversation.id !== id,
-            );
-
-            if (currentConversationId === id) {
-                const nextChatId =
-                    updated[0]?.id ?? "";
-
-                if (nextChatId) {
-                    selectConversation(nextChatId);
-                }
-            }
-
-            return updated;
-        });
     };
 
     /**
@@ -161,9 +114,8 @@ export function Chat() {
      */
     const handleDeleteAllChats = () => {
         clearConversations();
-        setConversations([]);
     };
-
+    
     /**
      * Extracts numerical results from assistant messages
      * belonging to the currently selected conversation.
