@@ -1,13 +1,13 @@
-# Frontend CI pipeline for pull request and branch validation.
+# Frontend CI pipeline for pull request validation.
 # Runs automated quality checks before changes are integrated into the project.
 
 name: Frontend CI
 
 on:
-  push:
   pull_request:
-    - dev
-    - main
+    branches:
+      - main
+      - dev
 
 jobs:
   quality:
