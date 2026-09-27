@@ -3,6 +3,7 @@
 import { useMemo, useState, type MouseEvent } from "react";
 
 import { LoadingIndicator } from "@/components/LoadingIndicator/LoadingIndicator";
+import { ChatHeader } from "@/components/Chat/ChatHeader/ChatHeader";
 import { MessageInput } from "@/components/MessageInput/MessageInput";
 import { MessageList } from "@/components/MessageList/MessageList";
 import { useChat } from "@/hooks/useChat";
@@ -267,30 +268,10 @@ export function Chat() {
             <section
                 className={styles.container}
             >
-                <header
-                    className={styles.header}
-                >
-                    <h1
-                        className={
-                            styles.appTitle
-                        }
-                    >
-                        Calculadora IA
-                    </h1>
-
-                    <button
-                        onClick={toggleTheme}
-                        className={
-                            styles.themeButton
-                        }
-                        title="Alternar Tema"
-                        aria-label="Alternar tema"
-                    >
-                        {theme === "dark"
-                            ? "☀️"
-                            : "🌙"}
-                    </button>
-                </header>
+                <ChatHeader
+                    theme={theme}
+                    onToggleTheme={toggleTheme}
+                />
 
                 <div
                     className={styles.messages}
