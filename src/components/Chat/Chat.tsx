@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type MouseEvent } from "react";
+
 import { LoadingIndicator } from "@/components/LoadingIndicator/LoadingIndicator";
 import { MessageInput } from "@/components/MessageInput/MessageInput";
 import { MessageList } from "@/components/MessageList/MessageList";
@@ -15,6 +16,7 @@ import styles from "./Chat.module.css";
 interface Conversation {
     /** Unique identifier for the conversation. */
     readonly id: string;
+
     /** Display title for the conversation history entry. */
     readonly title: string;
 }
@@ -25,6 +27,7 @@ interface Conversation {
 interface Result {
     /** Unique key identifier generated for the extracted result. */
     readonly id: string;
+
     /** Extracted numeric string value. */
     readonly value: string;
 }
@@ -35,8 +38,12 @@ interface Result {
  * @param content The text content to search for numerical values.
  * @returns The last matched numeric string, or `null` if no match is found.
  */
-const extractNumericResult = (content: string): string | null => {
-    const matches = content.match(/-?\d+(?:[.,]\d+)?/g);
+const extractNumericResult = (
+    content: string,
+): string | null => {
+    const matches = content.match(
+        /-?\d+(?:[.,]\d+)?/g,
+    );
 
     if (!matches || matches.length === 0) {
         return null;
@@ -46,8 +53,8 @@ const extractNumericResult = (content: string): string | null => {
 };
 
 /**
- * Main chat page component featuring collapsible sidebars, conversation session management,
- * theme toggling, and an extracted numerical result panel.
+ * Main chat page component featuring conversation session management,
+ * theme toggling, and a contextual result panel.
  *
  * @returns The rendered Chat view component.
  */
@@ -63,18 +70,37 @@ export function Chat() {
         deleteConversation,
         clearConversations,
     } = useChat();
+
     const { theme, toggleTheme } = useTheme();
 
     const [isLeftOpen, setIsLeftOpen] = useState(true);
-    const [isRightOpen, setIsRightOpen] = useState(true);
+
     const [conversations, setConversations] = useState<
         readonly Conversation[]
     >([
-        { id: "1", title: "Conversa principal" },
+        {
+            id: "1",
+            title: "Conversa principal",
+        },
     ]);
 
     /**
-     * Creates a new conversation item and sets it as the currently active chat in hook state.
+     * Currently selected conversation.
+     *
+     * The right contextual panel uses this value to identify
+     * which conversation the displayed results belong to.
+     */
+    const currentConversation = useMemo(
+        () =>
+            conversations.find(
+                (conversation) =>
+                    conversation.id === currentConversationId,
+            ) ?? null,
+        [conversations, currentConversationId],
+    );
+
+    /**
+     * Creates a new conversation and selects it.
      */
     const handleNewChat = () => {
         const newId = Date.now().toString();
@@ -85,26 +111,27 @@ export function Chat() {
             title: `Conversa ${nextNumber}`,
         };
 
-        setConversations((prev) => [newConversation, ...prev]);
+        setConversations((prev) => [
+            newConversation,
+            ...prev,
+        ]);
+
         createConversation(newId);
     };
 
     /**
-     * Handles switching active conversation.
+     * Handles switching between conversations.
      */
     const handleSelectChat = (id: string) => {
         selectConversation(id);
     };
 
     /**
-     * Removes a specific conversation from the history list by its identifier and hook state.
-     *
-     * @param id The unique identifier of the conversation to delete.
-     * @param event Mouse event object to stop event bubbling.
+     * Removes a conversation from the history and its message state.
      */
     const handleDeleteChat = (
         id: string,
-        event: React.MouseEvent,
+        event: MouseEvent,
     ) => {
         event.stopPropagation();
 
@@ -112,11 +139,14 @@ export function Chat() {
 
         setConversations((prev) => {
             const updated = prev.filter(
-                (conversation) => conversation.id !== id,
+                (conversation) =>
+                    conversation.id !== id,
             );
 
             if (currentConversationId === id) {
-                const nextChatId = updated[0]?.id || "";
+                const nextChatId =
+                    updated[0]?.id ?? "";
+
                 if (nextChatId) {
                     selectConversation(nextChatId);
                 }
@@ -127,7 +157,7 @@ export function Chat() {
     };
 
     /**
-     * Clears all conversations from UI and resets state in hook.
+     * Clears all conversations.
      */
     const handleDeleteAllChats = () => {
         clearConversations();
@@ -135,80 +165,129 @@ export function Chat() {
     };
 
     /**
-     * Extracts and memoizes recent numerical calculation results from assistant messages.
+     * Extracts numerical results from assistant messages
+     * belonging to the currently selected conversation.
      */
-    const recentResults = useMemo<readonly Result[]>(() => {
-        return messages
-            .filter((message) => message.role === "assistant")
-            .map((message, index) => {
-                const value = extractNumericResult(message.content);
+    const recentResults = useMemo<readonly Result[]>(
+        () =>
+            messages
+                .filter(
+                    (message) =>
+                        message.role === "assistant",
+                )
+                .map((message, index) => {
+                    const value =
+                        extractNumericResult(
+                            message.content,
+                        );
 
-                if (!value) {
-                    return null;
-                }
+                    if (!value) {
+                        return null;
+                    }
 
-                return {
-                    id: `${index}-${value}`,
-                    value,
-                };
-            })
-            .filter((result): result is Result => result !== null)
-            .reverse();
-    }, [messages]);
+                    return {
+                        id: `${message.id}-${index}`,
+                        value,
+                    };
+                })
+                .filter(
+                    (
+                        result,
+                    ): result is Result =>
+                        result !== null,
+                )
+                .reverse(),
+        [messages],
+    );
 
     return (
         <div
             className={`${styles.layout} ${
-                theme === "light" ? styles.lightTheme : ""
+                theme === "light"
+                    ? styles.lightTheme
+                    : ""
             }`}
         >
             <aside
                 className={`${styles.sidebar} ${
-                    !isLeftOpen ? styles.closed : ""
+                    !isLeftOpen
+                        ? styles.closed
+                        : ""
                 }`}
             >
                 <button
                     onClick={handleNewChat}
-                    className={styles.newChatButton}
+                    className={
+                        styles.newChatButton
+                    }
                 >
                     + Nova Conversa
                 </button>
 
-                <div className={styles.historyList}>
-                    {conversations.map((conversation) => (
-                        <div
-                            key={conversation.id}
-                            onClick={() => handleSelectChat(conversation.id)}
-                            className={`${styles.historyItem} ${
-                                conversation.id === currentConversationId
-                                    ? styles.active
-                                    : ""
-                            }`}
-                        >
-                            <span className={styles.historyTitle}>
-                                {conversation.title}
-                            </span>
-
-                            <button
-                                onClick={(event) =>
-                                    handleDeleteChat(
+                <div
+                    className={
+                        styles.historyList
+                    }
+                >
+                    {conversations.map(
+                        (conversation) => (
+                            <div
+                                key={
+                                    conversation.id
+                                }
+                                onClick={() =>
+                                    handleSelectChat(
                                         conversation.id,
-                                        event,
                                     )
                                 }
-                                className={styles.deleteButton}
-                                title="Excluir conversa"
+                                className={`${
+                                    styles.historyItem
+                                } ${
+                                    conversation.id ===
+                                    currentConversationId
+                                        ? styles.active
+                                        : ""
+                                }`}
                             >
-                                ×
-                            </button>
-                        </div>
-                    ))}
+                                <span
+                                    className={
+                                        styles.historyTitle
+                                    }
+                                >
+                                    {
+                                        conversation.title
+                                    }
+                                </span>
+
+                                <button
+                                    onClick={(
+                                        event,
+                                    ) =>
+                                        handleDeleteChat(
+                                            conversation.id,
+                                            event,
+                                        )
+                                    }
+                                    className={
+                                        styles.deleteButton
+                                    }
+                                    title="Excluir conversa"
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        ),
+                    )}
                 </div>
 
                 {conversations.length > 0 && (
                     <button
-                        onClick={handleDeleteAllChats}
-                        className={styles.deleteAllButton}
+                        onClick={
+                            handleDeleteAllChats
+                        }
+                        className={
+                            styles.deleteAllButton
+                        }
                     >
                         Excluir Todas
                     </button>
@@ -217,86 +296,211 @@ export function Chat() {
 
             <button
                 onClick={() =>
-                    setIsLeftOpen((prev) => !prev)
+                    setIsLeftOpen(
+                        (prev) => !prev,
+                    )
                 }
                 className={`${styles.toggleLeft} ${
-                    !isLeftOpen ? styles.closed : ""
+                    !isLeftOpen
+                        ? styles.closed
+                        : ""
                 }`}
                 title="Alternar Barra Lateral Esquerda"
+                aria-label="Alternar barra lateral esquerda"
+                aria-expanded={isLeftOpen}
             >
                 {isLeftOpen ? "◀" : "▶"}
             </button>
 
-            <section className={styles.container}>
-                <header className={styles.header}>
-                    <h1 className={styles.appTitle}>
+            <section
+                className={styles.container}
+            >
+                <header
+                    className={styles.header}
+                >
+                    <h1
+                        className={
+                            styles.appTitle
+                        }
+                    >
                         Calculadora IA
                     </h1>
 
                     <button
                         onClick={toggleTheme}
-                        className={styles.themeButton}
+                        className={
+                            styles.themeButton
+                        }
                         title="Alternar Tema"
+                        aria-label="Alternar tema"
                     >
-                        {theme === "dark" ? "☀️" : "🌙"}
+                        {theme === "dark"
+                            ? "☀️"
+                            : "🌙"}
                     </button>
                 </header>
 
-                <div className={styles.messages}>
-                    <MessageList messages={messages} />
+                <div
+                    className={styles.messages}
+                >
+                    <MessageList
+                        messages={messages}
+                    />
 
-                    {isLoading && <LoadingIndicator />}
+                    {isLoading && (
+                        <LoadingIndicator />
+                    )}
 
                     {error && (
-                        <p className={styles.error}>
+                        <p
+                            className={
+                                styles.error
+                            }
+                        >
                             {error}
                         </p>
                     )}
                 </div>
 
                 <MessageInput
-                    disabled={isLoading || !currentConversationId}
+                    disabled={
+                        isLoading ||
+                        !currentConversationId
+                    }
                     onSend={sendMessage}
                 />
             </section>
 
-            <button
-                onClick={() =>
-                    setIsRightOpen((prev) => !prev)
-                }
-                className={`${styles.toggleRight} ${
-                    !isRightOpen ? styles.closed : ""
-                }`}
-                title="Alternar Painel Direito"
-            >
-                {isRightOpen ? "▶" : "◀"}
-            </button>
-
             <aside
-                className={`${styles.rightSidebar} ${
-                    !isRightOpen ? styles.closed : ""
-                }`}
+                className={
+                    styles.rightSidebar
+                }
+                aria-label="Contexto da conversa"
             >
-                <div className={styles.boxSection}>
-                    <h3>Últimos Resultados</h3>
+                <div
+                    className={
+                        styles.rightSidebarHeader
+                    }
+                >
+                    <span
+                        className={
+                            styles.panelEyebrow
+                        }
+                    >
+                        CONTEXTO
+                    </span>
 
-                    <div className={styles.resultsList}>
-                        {recentResults.length === 0 ? (
-                            <div className={styles.resultBox}>
-                                Nenhum cálculo recente.
+                    <h2
+                        className={
+                            styles.rightSidebarTitle
+                        }
+                    >
+                        {currentConversation?.title ??
+                            "Nenhuma conversa"}
+                    </h2>
+                </div>
+
+                <div
+                    className={
+                        styles.contextSummary
+                    }
+                >
+                    <span
+                        className={
+                            styles.contextLabel
+                        }
+                    >
+                        Resultados encontrados
+                    </span>
+
+                    <strong
+                        className={
+                            styles.contextCount
+                        }
+                    >
+                        {recentResults.length}
+                    </strong>
+                </div>
+
+                <section
+                    className={
+                        styles.boxSection
+                    }
+                >
+                    <h3>
+                        Últimos resultados
+                    </h3>
+
+                    <div
+                        className={
+                            styles.resultsList
+                        }
+                    >
+                        {recentResults.length ===
+                        0 ? (
+                            <div
+                                className={
+                                    styles.emptyResult
+                                }
+                            >
+                                <strong>
+                                    Nenhum resultado
+                                    ainda.
+                                </strong>
+
+                                <span>
+                                    Os resultados desta
+                                    conversa aparecerão
+                                    aqui.
+                                </span>
                             </div>
                         ) : (
-                            recentResults.map((result) => (
-                                <div
-                                    key={result.id}
-                                    className={styles.resultBox}
-                                >
-                                    {result.value}
-                                </div>
-                            ))
+                            recentResults.map(
+                                (
+                                    result,
+                                    index,
+                                ) => (
+                                    <article
+                                        key={
+                                            result.id
+                                        }
+                                        className={
+                                            styles.resultBox
+                                        }
+                                    >
+                                        <div
+                                            className={
+                                                styles.resultMeta
+                                            }
+                                        >
+                                            <span>
+                                                Resultado #
+                                                {recentResults.length -
+                                                    index}
+                                            </span>
+
+                                            <span>
+                                                {
+                                                    currentConversation?.title
+                                                }
+                                            </span>
+                                        </div>
+
+                                        <strong
+                                            className={
+                                                styles.resultValue
+                                            }
+                                        >
+                                            {
+                                                result.value
+                                            }
+                                        </strong>
+                                    </article>
+                                ),
+                            )
                         )}
                     </div>
-                </div>
+                </section>
             </aside>
         </div>
     );

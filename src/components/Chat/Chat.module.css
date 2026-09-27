@@ -4,29 +4,49 @@
 
 :root {
     --bg-main: #050505;
-    --bg-radial: radial-gradient(circle at 50% 0%, #171717 0%, #050505 70%);
+
+    --bg-radial: radial-gradient(
+        circle at 50% 0%,
+        #171717 0%,
+        #050505 70%
+    );
+
     --bg-surface: rgba(26, 26, 26, 0.75);
     --bg-hover: rgba(38, 38, 38, 0.9);
+
     --border-color: rgba(217, 70, 239, 0.2);
     --border-active: rgba(217, 70, 239, 0.5);
+
     --text-main: #ffffff;
     --text-muted: #a3a3a3;
+
     --item-bg: rgba(26, 26, 26, 0.6);
     --item-active: rgba(38, 38, 38, 0.9);
+
     --glow-color: rgba(217, 70, 239, 0.15);
 }
 
 .layout.lightTheme {
     --bg-main: #ffffff;
-    --bg-radial: radial-gradient(circle at 50% 0%, #f4f4f5 0%, #ffffff 70%);
+
+    --bg-radial: radial-gradient(
+        circle at 50% 0%,
+        #f4f4f5 0%,
+        #ffffff 70%
+    );
+
     --bg-surface: rgba(244, 244, 245, 0.9);
     --bg-hover: rgba(228, 228, 231, 0.9);
+
     --border-color: rgba(217, 70, 239, 0.3);
     --border-active: rgba(217, 70, 239, 0.6);
+
     --text-main: #09090b;
     --text-muted: #52525b;
+
     --item-bg: rgba(244, 244, 245, 0.8);
     --item-active: rgba(228, 228, 231, 0.9);
+
     --glow-color: rgba(217, 70, 239, 0.1);
 }
 
@@ -34,66 +54,87 @@
    Base Layout Structure
    ========================================================================== */
 
+.layout,
+.layout * {
+    box-sizing: border-box;
+}
+
 .layout {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+
     width: 100vw;
+    height: 100vh;
+
+    position: relative;
     overflow: hidden;
+
     background: var(--bg-radial);
     color: var(--text-main);
-    position: relative;
-    transition: background 0.3s ease, color 0.3s ease;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
 }
+
+/* ==========================================================================
+   Main Content
+   ========================================================================== */
 
 .container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+
     width: 100%;
     max-width: 860px;
+    height: 100vh;
+
     padding: 20px 32px;
+
     margin-left: 260px;
-    margin-right: 260px;
+    margin-right: 320px;
+
     overflow: hidden;
+
     z-index: 1;
-    transition: margin 0.35s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.35s ease;
-}
-
-.sidebar.closed ~ .container {
-    margin-left: auto;
-}
-
-.rightSidebar.closed ~ .container {
-    margin-right: auto;
 }
 
 /* ==========================================================================
-   Sidebars & Panels
+   Left Sidebar
    ========================================================================== */
 
-.sidebar,
-.rightSidebar {
-    position: absolute;
+.sidebar {
+    position: fixed;
+
     top: 0;
     bottom: 0;
-    z-index: 5;
-    background: var(--bg-surface);
-    backdrop-filter: blur(16px);
+    left: 0;
+
+    z-index: 20;
+
+    width: 260px;
+
     display: flex;
     flex-direction: column;
-    padding: 20px 16px;
-    width: 260px;
-    opacity: 1;
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s;
-    transform: translateX(0);
-}
 
-.sidebar {
-    left: 0;
+    padding: 20px 16px;
+
+    background: var(--bg-surface);
+
+    backdrop-filter: blur(16px);
+
     border-right: 1px solid var(--border-color);
+
     box-shadow: 10px 0 30px rgba(0, 0, 0, 0.4);
+
+    opacity: 1;
+
+    transform: translateX(0);
+
+    transition:
+        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.35s ease;
 }
 
 .sidebar.closed {
@@ -102,55 +143,171 @@
     transform: translateX(-100%);
 }
 
-.rightSidebar {
-    right: 0;
-    border-left: 1px solid var(--border-color);
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.4);
-    overflow-y: auto;
-}
-
-.rightSidebar.closed {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(100%);
-}
-
 /* ==========================================================================
-   Toggles & Controls
+   Left Sidebar Toggle
    ========================================================================== */
 
-.toggleLeft,
-.toggleRight {
-    position: absolute;
+.toggleLeft {
+    position: fixed;
+
     top: 16px;
-    z-index: 10;
-    background: var(--bg-surface);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
+    left: 244px;
+
+    z-index: 30;
+
     width: 32px;
     height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
+    background: var(--bg-surface);
+
+    backdrop-filter: blur(8px);
+
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+
+    color: var(--text-main);
+
+    cursor: pointer;
+
     font-size: 0.8rem;
+
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+    transition:
+        left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
-.toggleLeft { left: 244px; }
-.toggleLeft.closed { left: 16px; }
+.toggleLeft.closed {
+    left: 16px;
+}
 
-.toggleRight { right: 244px; }
-.toggleRight.closed { right: 16px; }
-
-.toggleLeft:hover,
-.toggleRight:hover {
+.toggleLeft:hover {
     background: var(--bg-hover);
     border-color: var(--border-active);
     transform: scale(1.05);
+}
+
+/* ==========================================================================
+   Right Context Sidebar
+   ========================================================================== */
+
+.rightSidebar {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 25;
+
+    width: 320px;
+    max-width: 90vw;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 20px;
+
+    padding: 24px 18px;
+
+    background: var(--bg-surface);
+
+    backdrop-filter: blur(16px);
+
+    border-left: 1px solid var(--border-color);
+
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.4);
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* ==========================================================================
+   Right Sidebar Header
+   ========================================================================== */
+
+.rightSidebarHeader {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    padding-bottom: 16px;
+
+    border-bottom: 1px solid var(--border-color);
+}
+
+.panelEyebrow {
+    font-size: 0.7rem;
+    font-weight: 800;
+
+    letter-spacing: 0.12em;
+
+    color: #d946ef;
+}
+
+.rightSidebarTitle {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: var(--text-main);
+
+    font-size: 1.1rem;
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   Context Summary
+   ========================================================================== */
+
+.contextSummary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px 14px;
+
+    background: var(--item-bg);
+
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+
+.contextLabel {
+    color: var(--text-muted);
+
+    font-size: 0.8rem;
+}
+
+.contextCount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 28px;
+    height: 28px;
+
+    padding: 0 8px;
+
+    background: rgba(217, 70, 239, 0.12);
+
+    border: 1px solid var(--border-active);
+    border-radius: 8px;
+
+    color: var(--text-main);
+
+    font-size: 0.8rem;
 }
 
 /* ==========================================================================
@@ -161,212 +318,480 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     padding-bottom: 16px;
-    border-bottom: 1px solid var(--border-color);
     margin-bottom: 16px;
+
+    border-bottom: 1px solid var(--border-color);
 }
 
 .appTitle {
+    margin: 0;
+
     font-size: 1.25rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #d946ef 0%, #a855f7 50%, #701a75 100%);
+
+    background: linear-gradient(
+        135deg,
+        #d946ef 0%,
+        #a855f7 50%,
+        #701a75 100%
+    );
+
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .themeButton {
-    background: linear-gradient(135deg, #d946ef 0%, #9333ea 100%);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
     width: 40px;
     height: 40px;
-    border-radius: 10px;
-    cursor: pointer;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
+    background: linear-gradient(
+        135deg,
+        #d946ef 0%,
+        #9333ea 100%
+    );
+
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+
+    color: #ffffff;
+
+    cursor: pointer;
+
     font-size: 1rem;
-    transition: all 0.2s ease;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .themeButton:hover {
     background: var(--bg-hover);
     border-color: var(--border-active);
+    transform: translateY(-1px);
 }
 
+/* ==========================================================================
+   New Chat Button
+   ========================================================================== */
+
 .newChatButton {
-    background: linear-gradient(135deg, #d946ef 0%, #9333ea 100%);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.15);
     padding: 12px;
+
+    background: linear-gradient(
+        135deg,
+        #d946ef 0%,
+        #9333ea 100%
+    );
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 10px;
+
+    color: #ffffff;
+
     cursor: pointer;
+
     font-weight: 600;
     text-align: center;
+
     box-shadow: 0 4px 14px rgba(217, 70, 239, 0.3);
-    transition: all 0.2s ease;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .newChatButton:hover {
     transform: translateY(-1px);
+
     box-shadow: 0 6px 18px rgba(217, 70, 239, 0.45);
 }
 
+/* ==========================================================================
+   Delete All Button
+   ========================================================================== */
+
 .deleteAllButton {
-    background: transparent;
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    color: #ef4444;
     padding: 10px;
+
+    background: transparent;
+
+    border: 1px solid rgba(239, 68, 68, 0.4);
     border-radius: 10px;
+
+    color: #ef4444;
+
     cursor: pointer;
+
     font-size: 0.85rem;
     font-weight: 600;
-    transition: all 0.2s ease;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .deleteAllButton:hover {
     background: #ef4444;
     color: #ffffff;
+
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 /* ==========================================================================
-   History List Items
+   History List
    ========================================================================== */
 
 .historyList {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    overflow-y: auto;
     flex: 1;
-    padding-right: 4px;
+
+    gap: 8px;
+
+    overflow-y: auto;
+
     margin-top: 16px;
+    padding-right: 4px;
 }
 
 .historyItem {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 90%;
-    margin: 6px auto;
+
+    width: 100%;
+
+    margin: 0;
+
     padding: 12px;
-    border-radius: 10px;
-    box-sizing: border-box;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: var(--text-muted);
+
     background: var(--item-bg);
+
     border: 1px solid var(--border-color);
-    transition: all 0.2s ease;
+    border-radius: 10px;
+
+    color: var(--text-muted);
+
+    cursor: pointer;
+
+    font-size: 0.9rem;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .historyItem:hover {
     background: var(--bg-hover);
+
     color: var(--text-main);
+
     border-color: var(--border-active);
+
     transform: translateX(2px);
 }
 
 .historyItem.active {
     background: var(--item-active);
-    color: var(--text-main);
+
     border-color: var(--border-active);
+
+    color: var(--text-main);
+
     box-shadow: inset 0 0 12px var(--glow-color);
+
     font-weight: 600;
-    width: 90%;
-    margin: 6px auto;
-    padding: 10px 14px;
-    border-radius: 8px;
-    text-align: center;
-    box-sizing: border-box;
 }
 
 .historyTitle {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex: 1;
-    text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-}
 
-.deleteButton {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 2px 6px;
-    border-radius: 4px;
-    transition: all 0.2s;
-}
+    flex: 1;
+    min-width: 0;
 
-.deleteButton:hover {
-    color: #f87171;
-    background: rgba(248, 113, 113, 0.15);
+    overflow: hidden;
+
+    text-align: center;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* ==========================================================================
-   Messages & Sections
+   Delete Conversation Button
+   ========================================================================== */
+
+.deleteButton {
+    flex-shrink: 0;
+
+    padding: 2px 6px;
+
+    background: transparent;
+
+    border: none;
+    border-radius: 4px;
+
+    color: #ef4444;
+
+    cursor: pointer;
+
+    font-size: 1rem;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease;
+}
+
+.deleteButton:hover {
+    color: #ffffff;
+
+    background: rgba(239, 68, 68, 0.85);
+}
+
+/* ==========================================================================
+   Messages
    ========================================================================== */
 
 .messages {
     flex: 1;
-    overflow-y: auto;
-    margin-bottom: 16px;
+
     width: 100%;
     max-width: 100%;
-    margin-left: auto;
+
     margin-right: auto;
+    margin-bottom: 16px;
+    margin-left: auto;
+
     padding-right: 8px;
+
+    overflow-y: auto;
 }
+
+/* ==========================================================================
+   Context Sections
+   ========================================================================== */
 
 .boxSection {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+
+    gap: 10px;
 }
 
 .boxSection h3 {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    text-align: center;
+    margin: 0;
+
     color: var(--text-muted);
+
+    font-size: 0.8rem;
     font-weight: 700;
+
     letter-spacing: 0.08em;
+
+    text-align: left;
+    text-transform: uppercase;
 }
 
-.resultBox {
-    background: var(--bg-surface);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--border-color);
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    text-align: center;
-    color: inherit;
-    box-shadow: inset 0 0 12px var(--glow-color);
-}
+/* ==========================================================================
+   Results List
+   ========================================================================== */
 
 .resultsList {
     display: flex;
     flex-direction: column;
+
     gap: 10px;
 }
 
 /* ==========================================================================
-   Responsive Breakpoints
+   Result Card
+   ========================================================================== */
+
+.resultBox {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    padding: 14px;
+
+    background: var(--bg-surface);
+
+    backdrop-filter: blur(8px);
+
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+
+    color: inherit;
+
+    font-size: 0.9rem;
+
+    box-shadow: inset 0 0 12px var(--glow-color);
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.resultBox:hover {
+    background: var(--bg-hover);
+
+    border-color: var(--border-active);
+
+    transform: translateY(-1px);
+}
+
+.resultMeta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    color: var(--text-muted);
+
+    font-size: 0.7rem;
+}
+
+.resultMeta span:last-child {
+    max-width: 55%;
+
+    overflow: hidden;
+
+    text-align: right;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.resultValue {
+    display: block;
+
+    color: var(--text-main);
+
+    font-size: 1.35rem;
+    font-weight: 800;
+
+    text-align: left;
+}
+
+/* ==========================================================================
+   Empty Result State
+   ========================================================================== */
+
+.emptyResult {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    padding: 18px 14px;
+
+    background: var(--item-bg);
+
+    border: 1px dashed var(--border-color);
+    border-radius: 12px;
+
+    color: var(--text-muted);
+
+    text-align: left;
+}
+
+.emptyResult strong {
+    color: var(--text-main);
+
+    font-size: 0.85rem;
+}
+
+.emptyResult span {
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   Scrollbars
+   ========================================================================== */
+
+.historyList,
+.messages,
+.rightSidebar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-active) transparent;
+}
+
+.historyList::-webkit-scrollbar,
+.messages::-webkit-scrollbar,
+.rightSidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.historyList::-webkit-scrollbar-track,
+.messages::-webkit-scrollbar-track,
+.rightSidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.historyList::-webkit-scrollbar-thumb,
+.messages::-webkit-scrollbar-thumb,
+.rightSidebar::-webkit-scrollbar-thumb {
+    background: var(--border-active);
+    border-radius: 999px;
+}
+
+/* ==========================================================================
+   Responsive Layout
    ========================================================================== */
 
 @media (max-width: 1024px) {
     .container {
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        max-width: 100% !important;
+        max-width: 100%;
+
+        margin-left: 0;
+        margin-right: 320px;
+
         padding: 20px 16px;
+    }
+
+    .sidebar {
+        width: 240px;
+    }
+
+    .toggleLeft {
+        left: 224px;
+    }
+
+    .toggleLeft.closed {
+        left: 16px;
+    }
+
+    .rightSidebar {
+        width: 320px;
+    }
+}
+
+@media (max-width: 700px) {
+    .container {
+        margin-right: 0;
+
+        padding: 16px 12px;
+    }
+
+    .rightSidebar {
+        width: 100vw;
+        max-width: 100vw;
     }
 }
