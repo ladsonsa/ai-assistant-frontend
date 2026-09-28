@@ -1,5 +1,7 @@
 "use client";
 
+import { ChatResult } from "@/components/Chat/ChatResult/ChatResult";
+
 import styles from "./ChatContextPanel.module.css";
 
 interface Result {
@@ -80,42 +82,15 @@ export function ChatContextPanel({
                             </span>
                         </div>
                     ) : (
-                        results.map(
-                            (result, index) => (
-                                <article
-                                    key={result.id}
-                                    className={
-                                        styles.resultBox
-                                    }
-                                >
-                                    <div
-                                        className={
-                                            styles.resultMeta
-                                        }
-                                    >
-                                        <span>
-                                            Resultado #
-                                            {results.length -
-                                                index}
-                                        </span>
-
-                                        <span>
-                                            {
-                                                conversationTitle
-                                            }
-                                        </span>
-                                    </div>
-
-                                    <strong
-                                        className={
-                                            styles.resultValue
-                                        }
-                                    >
-                                        {result.value}
-                                    </strong>
-                                </article>
-                            ),
-                        )
+                        results.map((result, index) => (
+                            <ChatResult
+                                key={result.id}
+                                index={index}
+                                total={results.length}
+                                conversationTitle={conversationTitle}
+                                value={result.value}
+                            />
+                        ))
                     )}
                 </div>
             </section>
