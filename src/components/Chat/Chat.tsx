@@ -48,6 +48,40 @@ const extractNumericResult = (
     return matches[matches.length - 1];
 };
 
+const extractRecentResults = (
+    messages: readonly {
+        readonly id: string;
+        readonly role: string;
+        readonly content: string;
+    }[],
+): readonly Result[] =>
+    messages
+        .filter(
+            (message) =>
+                message.role === "assistant",
+        )
+        .map((message, index) => {
+            const value = extractNumericResult(
+                message.content,
+            );
+
+            if (!value) {
+                return null;
+            }
+
+            return {
+                id: `${message.id}-${index}`,
+                value,
+            };
+        })
+        .filter(
+            (
+                result,
+            ): result is Result =>
+                result !== null,
+        )
+        .reverse();
+
 /**
  * Main chat page component featuring conversation session management,
  * theme toggling, and a contextual result panel.
@@ -111,35 +145,8 @@ export function Chat() {
      * Extracts numerical results from assistant messages
      * belonging to the currently selected conversation.
      */
-    const recentResults = useMemo<readonly Result[]>(
-        () =>
-            messages
-                .filter(
-                    (message) =>
-                        message.role === "assistant",
-                )
-                .map((message, index) => {
-                    const value =
-                        extractNumericResult(
-                            message.content,
-                        );
-
-                    if (!value) {
-                        return null;
-                    }
-
-                    return {
-                        id: `${message.id}-${index}`,
-                        value,
-                    };
-                })
-                .filter(
-                    (
-                        result,
-                    ): result is Result =>
-                        result !== null,
-                )
-                .reverse(),
+    const recentResults = useMemo(
+        () => extractRecentResults(messages),
         [messages],
     );
 
