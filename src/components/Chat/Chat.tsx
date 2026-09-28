@@ -3,6 +3,9 @@
 import { useMemo, useState, type MouseEvent } from "react";
 
 import { LoadingIndicator } from "@/components/LoadingIndicator/LoadingIndicator";
+import { ChatContextPanel } from "@/components/Chat/ChatContextPanel/ChatContextPanel";
+import { ChatHeader } from "@/components/Chat/ChatHeader/ChatHeader";
+import { ChatHistory } from "@/components/Chat/ChatHistory/ChatHistory";
 import { MessageInput } from "@/components/MessageInput/MessageInput";
 import { MessageList } from "@/components/MessageList/MessageList";
 import { useChat } from "@/hooks/useChat";
@@ -10,15 +13,18 @@ import { useTheme } from "@/hooks/useTheme";
 
 import styles from "./Chat.module.css";
 
-
 /**
  * Interface representing an extracted numeric calculation result.
  */
 interface Result {
-    /** Unique key identifier generated for the extracted result. */
+    /**
+     * Unique key identifier generated for the extracted result.
+     */
     readonly id: string;
 
-    /** Extracted numeric string value. */
+    /**
+     * Extracted numeric string value.
+     */
     readonly value: string;
 }
 
@@ -76,7 +82,8 @@ export function Chat() {
         () =>
             conversations.find(
                 (conversation) =>
-                    conversation.id === currentConversationId,
+                    conversation.id ===
+                    currentConversationId,
             ) ?? null,
         [conversations, currentConversationId],
     );
@@ -86,7 +93,6 @@ export function Chat() {
      */
     const handleNewChat = () => {
         const newId = Date.now().toString();
-
         createConversation(newId);
     };
 
@@ -105,7 +111,6 @@ export function Chat() {
         event: MouseEvent,
     ) => {
         event.stopPropagation();
-
         deleteConversation(id);
     };
 
@@ -115,7 +120,7 @@ export function Chat() {
     const handleDeleteAllChats = () => {
         clearConversations();
     };
-    
+
     /**
      * Extracts numerical results from assistant messages
      * belonging to the currently selected conversation.
@@ -160,91 +165,19 @@ export function Chat() {
                     : ""
             }`}
         >
-            <aside
-                className={`${styles.sidebar} ${
-                    !isLeftOpen
-                        ? styles.closed
-                        : ""
-                }`}
-            >
-                <button
-                    onClick={handleNewChat}
-                    className={
-                        styles.newChatButton
-                    }
-                >
-                    + Nova Conversa
-                </button>
-
-                <div
-                    className={
-                        styles.historyList
-                    }
-                >
-                    {conversations.map(
-                        (conversation) => (
-                            <div
-                                key={
-                                    conversation.id
-                                }
-                                onClick={() =>
-                                    handleSelectChat(
-                                        conversation.id,
-                                    )
-                                }
-                                className={`${
-                                    styles.historyItem
-                                } ${
-                                    conversation.id ===
-                                    currentConversationId
-                                        ? styles.active
-                                        : ""
-                                }`}
-                            >
-                                <span
-                                    className={
-                                        styles.historyTitle
-                                    }
-                                >
-                                    {
-                                        conversation.title
-                                    }
-                                </span>
-
-                                <button
-                                    onClick={(
-                                        event,
-                                    ) =>
-                                        handleDeleteChat(
-                                            conversation.id,
-                                            event,
-                                        )
-                                    }
-                                    className={
-                                        styles.deleteButton
-                                    }
-                                    title="Excluir conversa"
-                                >
-                                    ×
-                                </button>
-                            </div>
-                        ),
-                    )}
-                </div>
-
-                {conversations.length > 0 && (
-                    <button
-                        onClick={
-                            handleDeleteAllChats
-                        }
-                        className={
-                            styles.deleteAllButton
-                        }
-                    >
-                        Excluir Todas
-                    </button>
-                )}
-            </aside>
+            <ChatHistory
+                conversations={conversations}
+                currentConversationId={
+                    currentConversationId
+                }
+                onNewChat={handleNewChat}
+                onSelectChat={handleSelectChat}
+                onDeleteChat={handleDeleteChat}
+                onDeleteAllChats={
+                    handleDeleteAllChats
+                }
+                isOpen={isLeftOpen}
+            />
 
             <button
                 onClick={() =>
@@ -267,30 +200,10 @@ export function Chat() {
             <section
                 className={styles.container}
             >
-                <header
-                    className={styles.header}
-                >
-                    <h1
-                        className={
-                            styles.appTitle
-                        }
-                    >
-                        Calculadora IA
-                    </h1>
-
-                    <button
-                        onClick={toggleTheme}
-                        className={
-                            styles.themeButton
-                        }
-                        title="Alternar Tema"
-                        aria-label="Alternar tema"
-                    >
-                        {theme === "dark"
-                            ? "☀️"
-                            : "🌙"}
-                    </button>
-                </header>
+                <ChatHeader
+                    theme={theme}
+                    onToggleTheme={toggleTheme}
+                />
 
                 <div
                     className={styles.messages}
@@ -323,137 +236,12 @@ export function Chat() {
                 />
             </section>
 
-            <aside
-                className={
-                    styles.rightSidebar
+            <ChatContextPanel
+                conversationTitle={
+                    currentConversation?.title ?? null
                 }
-                aria-label="Contexto da conversa"
-            >
-                <div
-                    className={
-                        styles.rightSidebarHeader
-                    }
-                >
-                    <span
-                        className={
-                            styles.panelEyebrow
-                        }
-                    >
-                        CONTEXTO
-                    </span>
-
-                    <h2
-                        className={
-                            styles.rightSidebarTitle
-                        }
-                    >
-                        {currentConversation?.title ??
-                            "Nenhuma conversa"}
-                    </h2>
-                </div>
-
-                <div
-                    className={
-                        styles.contextSummary
-                    }
-                >
-                    <span
-                        className={
-                            styles.contextLabel
-                        }
-                    >
-                        Resultados encontrados
-                    </span>
-
-                    <strong
-                        className={
-                            styles.contextCount
-                        }
-                    >
-                        {recentResults.length}
-                    </strong>
-                </div>
-
-                <section
-                    className={
-                        styles.boxSection
-                    }
-                >
-                    <h3>
-                        Últimos resultados
-                    </h3>
-
-                    <div
-                        className={
-                            styles.resultsList
-                        }
-                    >
-                        {recentResults.length ===
-                        0 ? (
-                            <div
-                                className={
-                                    styles.emptyResult
-                                }
-                            >
-                                <strong>
-                                    Nenhum resultado
-                                    ainda.
-                                </strong>
-
-                                <span>
-                                    Os resultados desta
-                                    conversa aparecerão
-                                    aqui.
-                                </span>
-                            </div>
-                        ) : (
-                            recentResults.map(
-                                (
-                                    result,
-                                    index,
-                                ) => (
-                                    <article
-                                        key={
-                                            result.id
-                                        }
-                                        className={
-                                            styles.resultBox
-                                        }
-                                    >
-                                        <div
-                                            className={
-                                                styles.resultMeta
-                                            }
-                                        >
-                                            <span>
-                                                Resultado #
-                                                {recentResults.length -
-                                                    index}
-                                            </span>
-
-                                            <span>
-                                                {
-                                                    currentConversation?.title
-                                                }
-                                            </span>
-                                        </div>
-
-                                        <strong
-                                            className={
-                                                styles.resultValue
-                                            }
-                                        >
-                                            {
-                                                result.value
-                                            }
-                                        </strong>
-                                    </article>
-                                ),
-                            )
-                        )}
-                    </div>
-                </section>
-            </aside>
+                results={recentResults}
+            />
         </div>
     );
 }
