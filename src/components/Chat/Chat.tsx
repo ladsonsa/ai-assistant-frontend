@@ -6,10 +6,12 @@ import { LoadingIndicator } from "@/components/LoadingIndicator/LoadingIndicator
 import { ChatContextPanel } from "@/components/Chat/ChatContextPanel/ChatContextPanel";
 import { ChatHeader } from "@/components/Chat/ChatHeader/ChatHeader";
 import { ChatHistory } from "@/components/Chat/ChatHistory/ChatHistory";
+import { Message } from "@/domain/entities/Message";
 import { MessageInput } from "@/components/MessageInput/MessageInput";
 import { MessageList } from "@/components/MessageList/MessageList";
 import { useChat } from "@/hooks/useChat";
 import { useTheme } from "@/hooks/useTheme";
+
 
 import styles from "./Chat.module.css";
 
@@ -49,11 +51,7 @@ const extractNumericResult = (
 };
 
 const extractRecentResults = (
-    messages: readonly {
-        readonly id: string;
-        readonly role: string;
-        readonly content: string;
-    }[],
+    messages: readonly Message[],
 ): readonly Result[] =>
     messages
         .filter(
