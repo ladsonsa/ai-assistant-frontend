@@ -1,75 +1,83 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { HttpChatRepository } from "./HttpChatRepository";
-import { ChatApi } from "../api/ChatApi";
+import { describe, expect, it, vi } from "vitest";
+
 import { Message } from "@/domain/entities/Message";
 import { MessageRole } from "@/domain/entities/MessageRole";
 
-/**
- * Unit test suite for the {@link HttpChatRepository} class.
- * Verifies payload mapping, interactions with {@link ChatApi}, domain entity creation, and error propagation.
- */
+import { ChatApi } from "../api/ChatApi";
+import { HttpChatRepository } from "./HttpChatRepository";
+
 describe("HttpChatRepository", () => {
-  let mockChatApi: ChatApi;
-  let repository: HttpChatRepository;
+    it("should map the conversation history to the API request DTO", async () => {
+        const chatApi = {
+            sendConversation: vi.fn().mockResolvedValue({
+                content: "Resposta",
+                metadata: {
+                    source: "test",
+                },
+            }),
+        } as unknown as ChatApi;
 
-  beforeEach(() => {
-    mockChatApi = {
-      sendConversation: vi.fn(),
-    } as unknown as ChatApi;
+        const repository = new HttpChatRepository(chatApi);
 
-    repository = new HttpChatRepository(mockChatApi);
-  });
+        const history = [
+            new Message(
+                "user-1",
+                MessageRole.USER,
+                "Quanto é 2 + 2?",
+                {
+                    language: "pt-BR",
+                },
+            ),
+        ];
 
-  /**
-   * Tests that domain {@link Message} entities are correctly mapped into DTO format,
-   * passed to the {@link ChatApi.sendConversation} method, and that the API response
-   * is properly mapped back into an assistant {@link Message} domain entity.
-   */
-  it("should send formatted history to ChatApi and return a valid Message domain entity", async () => {
-    const userMessage = new Message(
-      "msg-1",
-      MessageRole.USER,
-      "Olá, quanto é 2 + 2?",
-      {}
-    );
+        await repository.sendConversation(history);
 
-    vi.spyOn(mockChatApi, "sendConversation").mockResolvedValueOnce({
-      content: "O resultado de 2 + 2 é 4.",
-      metadata: {},
+        expect(chatApi.sendConversation).toHaveBeenCalledWith({
+            history: [
+                {
+                    role: "user",
+                    content: "Quanto é 2 + 2?",
+                    metadata: {
+                        language: "pt-BR",
+                    },
+                },
+            ],
+        });
     });
 
-    const response = await repository.sendConversation([userMessage]);
+    it("should map the API response to an assistant Message", async () => {
+        const chatApi = {
+            sendConversation: vi.fn().mockResolvedValue({
+                content: "4",
+                metadata: {
+                    source: "test",
+                },
+            }),
+        } as unknown as ChatApi;
 
-    expect(mockChatApi.sendConversation).toHaveBeenCalledTimes(1);
-    expect(mockChatApi.sendConversation).toHaveBeenCalledWith({
-      history: [
-        {
-          role: "user",
-          content: "Olá, quanto é 2 + 2?",
-          metadata: {},
-        },
-      ],
+        const repository = new HttpChatRepository(chatApi);
+
+        const result = await repository.sendConversation([]);
+
+        expect(result).toBeInstanceOf(Message);
+        expect(result.role).toBe(MessageRole.ASSISTANT);
+        expect(result.content).toBe("4");
+        expect(result.metadata).toEqual({
+            source: "test",
+        });
     });
 
-    expect(response).toBeInstanceOf(Message);
-    expect(response.role).toBe(MessageRole.ASSISTANT);
-    expect(response.content).toBe("O resultado de 2 + 2 é 4.");
-    expect(response.id).toBeDefined();
-  });
+    it("should propagate API errors", async () => {
+        const error = new Error("Server error");
 
-  /**
-   * Tests that any errors or network exceptions thrown by {@link ChatApi.sendConversation}
-   * are correctly rethrown/propagated up through the repository layer.
-   */
-  it("should propagate errors if ChatApi fails", async () => {
-    const userMessage = new Message("msg-1", MessageRole.USER, "Oi", {});
-    
-    vi.spyOn(mockChatApi, "sendConversation").mockRejectedValueOnce(
-      new Error("Network Error")
-    );
+        const chatApi = {
+            sendConversation: vi.fn().mockRejectedValue(error),
+        } as unknown as ChatApi;
 
-    await expect(repository.sendConversation([userMessage])).rejects.toThrow(
-      "Network Error"
-    );
-  });
+        const repository = new HttpChatRepository(chatApi);
+
+        await expect(
+            repository.sendConversation([]),
+        ).rejects.toThrow("Server error");
+    });
 });

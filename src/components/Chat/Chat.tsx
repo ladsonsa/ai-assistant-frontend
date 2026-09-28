@@ -6,10 +6,12 @@ import { LoadingIndicator } from "@/components/LoadingIndicator/LoadingIndicator
 import { ChatContextPanel } from "@/components/Chat/ChatContextPanel/ChatContextPanel";
 import { ChatHeader } from "@/components/Chat/ChatHeader/ChatHeader";
 import { ChatHistory } from "@/components/Chat/ChatHistory/ChatHistory";
+import { Message } from "@/domain/entities/Message";
 import { MessageInput } from "@/components/MessageInput/MessageInput";
 import { MessageList } from "@/components/MessageList/MessageList";
 import { useChat } from "@/hooks/useChat";
 import { useTheme } from "@/hooks/useTheme";
+
 
 import styles from "./Chat.module.css";
 
@@ -47,6 +49,36 @@ const extractNumericResult = (
 
     return matches[matches.length - 1];
 };
+
+const extractRecentResults = (
+    messages: readonly Message[],
+): readonly Result[] =>
+    messages
+        .filter(
+            (message) =>
+                message.role === "assistant",
+        )
+        .map((message, index) => {
+            const value = extractNumericResult(
+                message.content,
+            );
+
+            if (!value) {
+                return null;
+            }
+
+            return {
+                id: `${message.id}-${index}`,
+                value,
+            };
+        })
+        .filter(
+            (
+                result,
+            ): result is Result =>
+                result !== null,
+        )
+        .reverse();
 
 /**
  * Main chat page component featuring conversation session management,
@@ -111,35 +143,8 @@ export function Chat() {
      * Extracts numerical results from assistant messages
      * belonging to the currently selected conversation.
      */
-    const recentResults = useMemo<readonly Result[]>(
-        () =>
-            messages
-                .filter(
-                    (message) =>
-                        message.role === "assistant",
-                )
-                .map((message, index) => {
-                    const value =
-                        extractNumericResult(
-                            message.content,
-                        );
-
-                    if (!value) {
-                        return null;
-                    }
-
-                    return {
-                        id: `${message.id}-${index}`,
-                        value,
-                    };
-                })
-                .filter(
-                    (
-                        result,
-                    ): result is Result =>
-                        result !== null,
-                )
-                .reverse(),
+    const recentResults = useMemo(
+        () => extractRecentResults(messages),
         [messages],
     );
 
