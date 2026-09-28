@@ -97,13 +97,6 @@ export function Chat() {
     };
 
     /**
-     * Handles switching between conversations.
-     */
-    const handleSelectChat = (id: string) => {
-        selectConversation(id);
-    };
-
-    /**
      * Removes a conversation from the history and its message state.
      */
     const handleDeleteChat = (
@@ -112,13 +105,6 @@ export function Chat() {
     ) => {
         event.stopPropagation();
         deleteConversation(id);
-    };
-
-    /**
-     * Clears all conversations.
-     */
-    const handleDeleteAllChats = () => {
-        clearConversations();
     };
 
     /**
@@ -171,11 +157,9 @@ export function Chat() {
                     currentConversationId
                 }
                 onNewChat={handleNewChat}
-                onSelectChat={handleSelectChat}
+                onSelectChat={selectConversation}
                 onDeleteChat={handleDeleteChat}
-                onDeleteAllChats={
-                    handleDeleteAllChats
-                }
+                onDeleteAllChats={clearConversations}
                 isOpen={isLeftOpen}
             />
 
