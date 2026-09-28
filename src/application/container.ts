@@ -2,9 +2,11 @@ import { env } from "@/config/env";
 import { SendConversationUseCase } from "@/domain/usecases/SendConversationUseCase";
 import { ChatApi } from "@/infrastructure/api/ChatApi";
 import { HttpChatRepository } from "@/infrastructure/repositories/HttpChatRepository";
+import { MockChatRepository } from "@/infrastructure/repositories/MockChatRepository";
 
-const chatApi = new ChatApi(env.apiUrl);
-const chatRepository = new HttpChatRepository(chatApi);
+const chatRepository = env.useMock
+    ? new MockChatRepository()
+    : new HttpChatRepository(new ChatApi(env.apiUrl));
 
 /**
  * Singleton instance of {@link SendConversationUseCase} configured with concrete
