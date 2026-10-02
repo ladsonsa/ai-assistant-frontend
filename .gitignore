@@ -90,6 +90,7 @@ web_modules/
 # Next.js build output
 .next
 out
+next-env.d.ts
 
 # Nuxt.js build / generate output
 .nuxt
@@ -140,5 +141,9 @@ dist
 
 # SvelteKit build / generate output
 .svelte-kit
+
+### Playwright ###
+playwright-report/
+test-results/
 
 # End of https://www.toptal.com/developers/gitignore/api/node
