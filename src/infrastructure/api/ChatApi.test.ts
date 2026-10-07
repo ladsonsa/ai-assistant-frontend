@@ -66,4 +66,61 @@ describe("ChatApi", () => {
       })
     ).rejects.toThrow("Unable to communicate with the server.");
   });
+  
+  it("should return a valid chat response", async () => {
+    const responseBody = {
+      content: "Resposta válida.",
+      metadata: {},
+    };
+
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      json: vi.fn().mockResolvedValueOnce(responseBody),
+    } as unknown as Response);
+
+    await expect(
+      chatApi.sendConversation({ history: [] })
+    ).resolves.toEqual(responseBody);
+  });
+
+  it("should reject a response without content", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      json: vi.fn().mockResolvedValueOnce({
+        metadata: {},
+      }),
+    } as unknown as Response);
+
+    await expect(
+      chatApi.sendConversation({ history: [] })
+    ).rejects.toThrow("Invalid chat response.");
+  });
+
+  it("should reject a response with non-string content", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      json: vi.fn().mockResolvedValueOnce({
+        content: 123,
+        metadata: {},
+      }),
+    } as unknown as Response);
+
+    await expect(
+      chatApi.sendConversation({ history: [] })
+    ).rejects.toThrow("Invalid chat response.");
+  });
+
+  it("should reject a response with invalid metadata", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      json: vi.fn().mockResolvedValueOnce({
+        content: "Resposta válida.",
+        metadata: "invalid",
+      }),
+    } as unknown as Response);
+
+    await expect(
+      chatApi.sendConversation({ history: [] })
+    ).rejects.toThrow("Invalid chat response.");
+  });
 });
